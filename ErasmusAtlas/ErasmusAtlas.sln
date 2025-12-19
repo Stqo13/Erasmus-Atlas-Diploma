@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36518.9 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ErasmusAtlas", "ErasmusAtlas\ErasmusAtlas.csproj", "{CA689A03-D62F-44A7-B13D-AAEB341D768F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ErasmusAtlas.Infrastructure", "ErasmusAtlas.Data\ErasmusAtlas.Infrastructure.csproj", "{11EE134A-8DCB-4641-9828-BCF5EBCA415E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ErasmusAtlas.Common", "ErasmusAtlas.Common\ErasmusAtlas.Common.csproj", "{48B313F2-2A6D-4FFC-BFFB-CC9018B639FA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ErasmusAtlas.ViewModels", "ErasmusAtlas.ViewModels\ErasmusAtlas.ViewModels.csproj", "{DA197855-A732-45F1-AE1C-0E50FBB206FC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ErasmusAtlas.Core", "ErasmusAtlas.Core\ErasmusAtlas.Core.csproj", "{B75EE281-003B-43ED-B62C-A1BFAECA6C02}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CA689A03-D62F-44A7-B13D-AAEB341D768F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA689A03-D62F-44A7-B13D-AAEB341D768F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA689A03-D62F-44A7-B13D-AAEB341D768F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA689A03-D62F-44A7-B13D-AAEB341D768F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11EE134A-8DCB-4641-9828-BCF5EBCA415E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11EE134A-8DCB-4641-9828-BCF5EBCA415E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11EE134A-8DCB-4641-9828-BCF5EBCA415E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11EE134A-8DCB-4641-9828-BCF5EBCA415E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48B313F2-2A6D-4FFC-BFFB-CC9018B639FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48B313F2-2A6D-4FFC-BFFB-CC9018B639FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48B313F2-2A6D-4FFC-BFFB-CC9018B639FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48B313F2-2A6D-4FFC-BFFB-CC9018B639FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA197855-A732-45F1-AE1C-0E50FBB206FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA197855-A732-45F1-AE1C-0E50FBB206FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA197855-A732-45F1-AE1C-0E50FBB206FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA197855-A732-45F1-AE1C-0E50FBB206FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B75EE281-003B-43ED-B62C-A1BFAECA6C02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B75EE281-003B-43ED-B62C-A1BFAECA6C02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B75EE281-003B-43ED-B62C-A1BFAECA6C02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B75EE281-003B-43ED-B62C-A1BFAECA6C02}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {11F26469-A636-4A20-96BF-390A138C7CC2}
+	EndGlobalSection
+EndGlobal
