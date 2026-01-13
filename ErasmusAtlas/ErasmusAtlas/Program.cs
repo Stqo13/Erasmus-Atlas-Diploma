@@ -15,21 +15,30 @@ namespace ErasmusAtlas
 
             builder.Services.AddDbContext<ErasmusAtlasDbContext>(options =>
             {
-                options.UseNpgsql(
+                options.UseSqlServer(
                     builder.Configuration.GetConnectionString("DefaultConnection"),
-                    npgsqlOptions =>
-                    {
-                        npgsqlOptions.UseNetTopologySuite();
-                    });
+                    x => x.UseNetTopologySuite());
             });
 
             builder.Services.AddIdentity<ErasmusUser, IdentityRole>(options =>
             {
-                options.Password.RequiredLength = 6;
                 options.User.RequireUniqueEmail = true;
+                options.Password.RequiredLength = 6;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireDigit = false;
             })
             .AddEntityFrameworkStores<ErasmusAtlasDbContext>()
             .AddDefaultTokenProviders();
+
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Account/Login";
+                options.LogoutPath = "/Account/Logout";
+                options.AccessDeniedPath = "/Account/AccessDenied";
+                options.SlidingExpiration = true;
+            });
 
             builder.Services.AddControllersWithViews();
 
@@ -49,6 +58,7 @@ namespace ErasmusAtlas
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(

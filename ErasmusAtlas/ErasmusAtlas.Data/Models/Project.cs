@@ -1,6 +1,7 @@
-﻿using System.Drawing;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+
+using NetTopologySuite.Geometries;
 
 namespace ErasmusAtlas.Infrastructure.Models;
 
@@ -20,7 +21,7 @@ public class Project
     [Required]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    [Column(TypeName = "geometry(Point,4326)")]
+    [Column(TypeName = "geography")]
     public Point? Location { get; set; }
 
     [Required]

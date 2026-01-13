@@ -1,6 +1,7 @@
-﻿using System.Drawing;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+
+using NetTopologySuite.Geometries;
 
 namespace ErasmusAtlas.Infrastructure.Models;
 
@@ -24,8 +25,7 @@ public class Post
     [Required]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    // PostGIS point (SRID 4326)
-    [Column(TypeName = "geometry(Point,4326)")]
+    [Column(TypeName = "geography")]
     public Point? Location { get; set; }
 
     public int? CityId { get; set; }

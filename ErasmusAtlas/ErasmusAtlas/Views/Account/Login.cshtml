@@ -1,0 +1,58 @@
+﻿@model ErasmusAtlas.ViewModels.AccountViewModels.LoginViewModel;
+
+@{
+    ViewData["Title"] = "Login";
+    var returnUrl = ViewBag.ReturnUrl as string;
+}
+
+<div class="card">
+    <div class="card-header">
+        <h1 class="h1">Welcome back</h1>
+        <p class="muted">Login with your username or email.</p>
+    </div>
+
+    <div class="card-body">
+        <form class="form" asp-controller="Account" asp-action="Login" method="post">
+            @Html.AntiForgeryToken()
+
+            @if (!string.IsNullOrWhiteSpace(returnUrl))
+            {
+                <input type="hidden" name="returnUrl" value="@returnUrl" />
+            }
+
+            <div asp-validation-summary="ModelOnly" class="validation"></div>
+
+            <div class="field">
+                <label asp-for="UsernameOrEmail">Username or Email</label>
+                <input class="input" asp-for="UsernameOrEmail" autocomplete="username" />
+                <span asp-validation-for="UsernameOrEmail" class="validation"></span>
+            </div>
+
+            <div class="field">
+                <label asp-for="Password"></label>
+                <input class="input" asp-for="Password" autocomplete="current-password" />
+                <span asp-validation-for="Password" class="validation"></span>
+            </div>
+
+            <div class="field" style="display:flex; align-items:center; gap:10px;">
+                <input id="rememberMe" type="checkbox" asp-for="RememberMe" style="transform: translateY(1px);" />
+                <label for="rememberMe" style="margin:0; color: var(--muted);">Remember me</label>
+            </div>
+
+            <div class="actions">
+                <a class="btn" asp-controller="Home" asp-action="Index">Cancel</a>
+                <button class="btn btn-primary" type="submit">Login</button>
+            </div>
+
+            <div class="muted" style="margin-top:14px;">
+                Don’t have an account?
+                <a asp-controller="Account" asp-action="Register" asp-route-returnUrl="@returnUrl">Register</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
