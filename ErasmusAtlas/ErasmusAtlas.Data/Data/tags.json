@@ -1,0 +1,34 @@
+[
+  {
+    "id": 1,
+    "name": "IT"
+  },
+  {
+    "id": 2,
+    "name": "Business"
+  },
+  {
+    "id": 3,
+    "name": "Engineering"
+  },
+  {
+    "id": 4,
+    "name": "Medicine"
+  },
+  {
+    "id": 5,
+    "name": "Design"
+  },
+  {
+    "id": 6,
+    "name": "Languages"
+  },
+  {
+    "id": 7,
+    "name": "Psychology"
+  },
+  {
+    "id": 8,
+    "name": "Law"
+  }
+]

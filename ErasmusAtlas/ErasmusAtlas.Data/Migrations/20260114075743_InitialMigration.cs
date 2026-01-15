@@ -4,6 +4,8 @@ using NetTopologySuite.Geometries;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace ErasmusAtlas.Infrastructure.Migrations
 {
     /// <inheritdoc />
@@ -335,6 +337,34 @@ namespace ErasmusAtlas.Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.InsertData(
+                table: "ProjectTypes",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Praktika" },
+                    { 2, "Erasmus+ Exchange" },
+                    { 3, "Erasmus Course" },
+                    { 4, "Volunteering" },
+                    { 5, "Research / Lab" },
+                    { 6, "Summer School" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Tags",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1, "IT" },
+                    { 2, "Business" },
+                    { 3, "Engineering" },
+                    { 4, "Medicine" },
+                    { 5, "Design" },
+                    { 6, "Languages" },
+                    { 7, "Psychology" },
+                    { 8, "Law" }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -418,6 +448,18 @@ namespace ErasmusAtlas.Infrastructure.Migrations
                 name: "IX_ProjectTags_ProjectId",
                 table: "ProjectTags",
                 column: "ProjectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjectTypes_Name",
+                table: "ProjectTypes",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tags_Name",
+                table: "Tags",
+                column: "Name",
+                unique: true);
         }
 
         /// <inheritdoc />

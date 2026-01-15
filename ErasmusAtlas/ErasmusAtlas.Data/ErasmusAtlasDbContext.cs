@@ -1,6 +1,9 @@
-﻿using ErasmusAtlas.Infrastructure.Models;
+﻿using System.Reflection;
+
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+
+using ErasmusAtlas.Infrastructure.Models;
 
 namespace ErasmusAtlas.Infrastructure;
 
@@ -26,6 +29,8 @@ public class ErasmusAtlasDbContext : IdentityDbContext
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
+        builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
         base.OnModelCreating(builder);
     }
 }

@@ -222,7 +222,42 @@ namespace ErasmusAtlas.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Name")
+                        .IsUnique();
+
                     b.ToTable("ProjectTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Praktika"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Erasmus+ Exchange"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Erasmus Course"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Volunteering"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Research / Lab"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Summer School"
+                        });
                 });
 
             modelBuilder.Entity("ErasmusAtlas.Infrastructure.Models.Tag", b =>
@@ -240,7 +275,52 @@ namespace ErasmusAtlas.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Name")
+                        .IsUnique();
+
                     b.ToTable("Tags");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "IT"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Business"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Engineering"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Medicine"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Design"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Languages"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "Psychology"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "Law"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

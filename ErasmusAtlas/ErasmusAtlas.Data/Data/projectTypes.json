@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "name": "Praktika"
+  },
+  {
+    "id": 2,
+    "name": "Erasmus+ Exchange"
+  },
+  {
+    "id": 3,
+    "name": "Erasmus Course"
+  },
+  {
+    "id": 4,
+    "name": "Volunteering"
+  },
+  {
+    "id": 5,
+    "name": "Research / Lab"
+  },
+  {
+    "id": 6,
+    "name": "Summer School"
+  }
+]
