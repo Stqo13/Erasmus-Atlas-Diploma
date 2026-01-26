@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ErasmusAtlas</title>
+
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body class="app-body">
+    <div class="app-shell">
+        <aside class="sidebar">
+            @await Html.PartialAsync("_Sidebar")
+        </aside>
+
+        <div class="app-main">
+            <header class="topbar">
+                @await Html.PartialAsync("_Topbar")
+            </header>
+
+            <main class="content">
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

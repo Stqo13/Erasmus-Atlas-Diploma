@@ -4,12 +4,13 @@ using Microsoft.AspNetCore.Identity;
 using ErasmusAtlas.Extensions;
 using ErasmusAtlas.Infrastructure;
 using ErasmusAtlas.Infrastructure.Models;
+using ErasmusAtlas.Infrastructure.RunTimeSeeders;
 
 namespace ErasmusAtlas
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -46,6 +47,25 @@ namespace ErasmusAtlas
             builder.Services.RegisterUserDefinedServices();
 
             var app = builder.Build();
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<ErasmusAtlasDbContext>();
+                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ErasmusUser>>();
+                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+                await db.Database.MigrateAsync();
+
+                await IdentitySeeder.SeedRolesAsync(roleManager);
+                var users = await IdentitySeeder.SeedUsersAsync(userManager);
+                var userIds = users.Select(u => u.Id).ToList();
+
+                await PostSeeder.SeedPostsAsync(db, userIds);
+
+                await InstitutionSeeder.SeedAsync(db);
+                await ProjectSeeder.SeedAsync(db, totalProjects: 120);
+                await ProjectApplicationSeeder.SeedAsync(db, userIds, maxApplicationsPerProject: 3);
+            }
 
             if (!app.Environment.IsDevelopment())
             {

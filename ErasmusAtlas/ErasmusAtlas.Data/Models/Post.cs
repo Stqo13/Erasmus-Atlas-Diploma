@@ -18,6 +18,9 @@ public class Post
     [MaxLength(8000)]
     public string Body { get; set; } = null!;
 
+    [MaxLength(40)]
+    public string Topic { get; set; } = "General";
+
     [Required]
     [MaxLength(32)]
     public string Status { get; set; } = "Published";

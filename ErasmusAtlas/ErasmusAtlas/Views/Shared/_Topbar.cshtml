@@ -1,0 +1,29 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ErasmusUser> SignInManager
+
+<div class="topbar-left">
+    <h1 class="page-title">@ViewData["Title"]</h1>
+</div>
+
+<div class="topbar-right">
+    <div class="search">
+        <span class="dot"></span>
+        <input type="text" name="q" placeholder="Search..." />
+    </div>
+
+    <button class="icon-btn" type="button" title="Language"></button>
+    <button class="icon-btn" type="button" title="Notifications"></button>
+
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <div class="user-pill" title="Account">
+            <span class="user-avatar"></span>
+            <span>@User.Identity!.Name</span>
+        </div>
+    }
+    else
+    {
+        <a class="btn btn-ghost" asp-controller="Account" asp-action="Login">Login</a>
+        <a class="btn btn-primary" asp-controller="Account" asp-action="Register">Register</a>
+    }
+</div>

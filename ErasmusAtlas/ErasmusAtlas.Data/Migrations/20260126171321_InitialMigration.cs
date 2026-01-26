@@ -63,7 +63,9 @@ namespace ErasmusAtlas.Infrastructure.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(120)", maxLength: 120, nullable: false),
-                    CountryIso2 = table.Column<string>(type: "nvarchar(2)", maxLength: 2, nullable: false)
+                    CountryIso2 = table.Column<string>(type: "nvarchar(2)", maxLength: 2, nullable: false),
+                    Latitude = table.Column<double>(type: "float", nullable: false),
+                    Longitude = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -229,6 +231,7 @@ namespace ErasmusAtlas.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(160)", maxLength: 160, nullable: false),
                     Body = table.Column<string>(type: "nvarchar(max)", maxLength: 8000, nullable: false),
+                    Topic = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
                     Status = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Location = table.Column<Point>(type: "geography", nullable: true),
@@ -335,6 +338,53 @@ namespace ErasmusAtlas.Infrastructure.Migrations
                         principalTable: "Tags",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "Cities",
+                columns: new[] { "Id", "CountryIso2", "Latitude", "Longitude", "Name" },
+                values: new object[,]
+                {
+                    { 1, "ES", 40.416800000000002, -3.7038000000000002, "Madrid" },
+                    { 2, "ES", 41.385100000000001, 2.1734, "Barcelona" },
+                    { 3, "ES", 39.469900000000003, -0.37630000000000002, "Valencia" },
+                    { 4, "ES", 37.389099999999999, -5.9844999999999997, "Seville" },
+                    { 5, "IT", 41.902799999999999, 12.4964, "Rome" },
+                    { 6, "IT", 45.464199999999998, 9.1899999999999995, "Milan" },
+                    { 7, "IT", 44.494900000000001, 11.342599999999999, "Bologna" },
+                    { 8, "IT", 43.769599999999997, 11.255800000000001, "Florence" },
+                    { 9, "FR", 48.8566, 2.3521999999999998, "Paris" },
+                    { 10, "FR", 45.764000000000003, 4.8357000000000001, "Lyon" },
+                    { 11, "FR", 44.837800000000001, -0.57920000000000005, "Bordeaux" },
+                    { 12, "FR", 43.604700000000001, 1.4441999999999999, "Toulouse" },
+                    { 13, "DE", 52.520000000000003, 13.404999999999999, "Berlin" },
+                    { 14, "DE", 48.135100000000001, 11.582000000000001, "Munich" },
+                    { 15, "DE", 53.551099999999998, 9.9937000000000005, "Hamburg" },
+                    { 16, "DE", 49.398800000000001, 8.6723999999999997, "Heidelberg" },
+                    { 17, "PT", 38.722299999999997, -9.1393000000000004, "Lisbon" },
+                    { 18, "PT", 41.157899999999998, -8.6290999999999993, "Porto" },
+                    { 19, "PT", 40.203299999999999, -8.4102999999999994, "Coimbra" },
+                    { 20, "PT", 41.545400000000001, -8.4265000000000008, "Braga" },
+                    { 21, "NL", 52.367600000000003, 4.9040999999999997, "Amsterdam" },
+                    { 22, "NL", 52.090699999999998, 5.1214000000000004, "Utrecht" },
+                    { 23, "NL", 53.2194, 6.5664999999999996, "Groningen" },
+                    { 24, "NL", 52.1601, 4.4969999999999999, "Leiden" },
+                    { 25, "PL", 52.229700000000001, 21.0122, "Warsaw" },
+                    { 26, "PL", 50.064700000000002, 19.945, "Krak?w" },
+                    { 27, "PL", 54.351999999999997, 18.646599999999999, "Gda?sk" },
+                    { 28, "PL", 51.107900000000001, 17.038499999999999, "Wroc?aw" },
+                    { 29, "CZ", 50.075499999999998, 14.437799999999999, "Prague" },
+                    { 30, "CZ", 49.195099999999996, 16.6068, "Brno" },
+                    { 31, "CZ", 49.593800000000002, 17.250900000000001, "Olomouc" },
+                    { 32, "CZ", 49.738399999999999, 13.3736, "Plze?" },
+                    { 33, "SE", 59.329300000000003, 18.0686, "Stockholm" },
+                    { 34, "SE", 57.7089, 11.974600000000001, "Gothenburg" },
+                    { 35, "SE", 55.704700000000003, 13.191000000000001, "Lund" },
+                    { 36, "SE", 59.858600000000003, 17.6389, "Uppsala" },
+                    { 37, "GR", 37.983800000000002, 23.727499999999999, "Athens" },
+                    { 38, "GR", 40.640099999999997, 22.944400000000002, "Thessaloniki" },
+                    { 39, "GR", 38.246600000000001, 21.7346, "Patras" },
+                    { 40, "GR", 35.338700000000003, 25.144200000000001, "Heraklion" }
                 });
 
             migrationBuilder.InsertData(

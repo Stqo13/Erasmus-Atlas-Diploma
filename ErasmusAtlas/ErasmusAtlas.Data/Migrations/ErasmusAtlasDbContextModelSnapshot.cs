@@ -36,6 +36,12 @@ namespace ErasmusAtlas.Infrastructure.Migrations
                         .HasMaxLength(2)
                         .HasColumnType("nvarchar(2)");
 
+                    b.Property<double>("Latitude")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Longitude")
+                        .HasColumnType("float");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(120)
@@ -44,6 +50,328 @@ namespace ErasmusAtlas.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Cities");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CountryIso2 = "ES",
+                            Latitude = 40.416800000000002,
+                            Longitude = -3.7038000000000002,
+                            Name = "Madrid"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CountryIso2 = "ES",
+                            Latitude = 41.385100000000001,
+                            Longitude = 2.1734,
+                            Name = "Barcelona"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CountryIso2 = "ES",
+                            Latitude = 39.469900000000003,
+                            Longitude = -0.37630000000000002,
+                            Name = "Valencia"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CountryIso2 = "ES",
+                            Latitude = 37.389099999999999,
+                            Longitude = -5.9844999999999997,
+                            Name = "Seville"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CountryIso2 = "IT",
+                            Latitude = 41.902799999999999,
+                            Longitude = 12.4964,
+                            Name = "Rome"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CountryIso2 = "IT",
+                            Latitude = 45.464199999999998,
+                            Longitude = 9.1899999999999995,
+                            Name = "Milan"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            CountryIso2 = "IT",
+                            Latitude = 44.494900000000001,
+                            Longitude = 11.342599999999999,
+                            Name = "Bologna"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            CountryIso2 = "IT",
+                            Latitude = 43.769599999999997,
+                            Longitude = 11.255800000000001,
+                            Name = "Florence"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            CountryIso2 = "FR",
+                            Latitude = 48.8566,
+                            Longitude = 2.3521999999999998,
+                            Name = "Paris"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            CountryIso2 = "FR",
+                            Latitude = 45.764000000000003,
+                            Longitude = 4.8357000000000001,
+                            Name = "Lyon"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            CountryIso2 = "FR",
+                            Latitude = 44.837800000000001,
+                            Longitude = -0.57920000000000005,
+                            Name = "Bordeaux"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            CountryIso2 = "FR",
+                            Latitude = 43.604700000000001,
+                            Longitude = 1.4441999999999999,
+                            Name = "Toulouse"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            CountryIso2 = "DE",
+                            Latitude = 52.520000000000003,
+                            Longitude = 13.404999999999999,
+                            Name = "Berlin"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            CountryIso2 = "DE",
+                            Latitude = 48.135100000000001,
+                            Longitude = 11.582000000000001,
+                            Name = "Munich"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            CountryIso2 = "DE",
+                            Latitude = 53.551099999999998,
+                            Longitude = 9.9937000000000005,
+                            Name = "Hamburg"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            CountryIso2 = "DE",
+                            Latitude = 49.398800000000001,
+                            Longitude = 8.6723999999999997,
+                            Name = "Heidelberg"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            CountryIso2 = "PT",
+                            Latitude = 38.722299999999997,
+                            Longitude = -9.1393000000000004,
+                            Name = "Lisbon"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            CountryIso2 = "PT",
+                            Latitude = 41.157899999999998,
+                            Longitude = -8.6290999999999993,
+                            Name = "Porto"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            CountryIso2 = "PT",
+                            Latitude = 40.203299999999999,
+                            Longitude = -8.4102999999999994,
+                            Name = "Coimbra"
+                        },
+                        new
+                        {
+                            Id = 20,
+                            CountryIso2 = "PT",
+                            Latitude = 41.545400000000001,
+                            Longitude = -8.4265000000000008,
+                            Name = "Braga"
+                        },
+                        new
+                        {
+                            Id = 21,
+                            CountryIso2 = "NL",
+                            Latitude = 52.367600000000003,
+                            Longitude = 4.9040999999999997,
+                            Name = "Amsterdam"
+                        },
+                        new
+                        {
+                            Id = 22,
+                            CountryIso2 = "NL",
+                            Latitude = 52.090699999999998,
+                            Longitude = 5.1214000000000004,
+                            Name = "Utrecht"
+                        },
+                        new
+                        {
+                            Id = 23,
+                            CountryIso2 = "NL",
+                            Latitude = 53.2194,
+                            Longitude = 6.5664999999999996,
+                            Name = "Groningen"
+                        },
+                        new
+                        {
+                            Id = 24,
+                            CountryIso2 = "NL",
+                            Latitude = 52.1601,
+                            Longitude = 4.4969999999999999,
+                            Name = "Leiden"
+                        },
+                        new
+                        {
+                            Id = 25,
+                            CountryIso2 = "PL",
+                            Latitude = 52.229700000000001,
+                            Longitude = 21.0122,
+                            Name = "Warsaw"
+                        },
+                        new
+                        {
+                            Id = 26,
+                            CountryIso2 = "PL",
+                            Latitude = 50.064700000000002,
+                            Longitude = 19.945,
+                            Name = "Krak?w"
+                        },
+                        new
+                        {
+                            Id = 27,
+                            CountryIso2 = "PL",
+                            Latitude = 54.351999999999997,
+                            Longitude = 18.646599999999999,
+                            Name = "Gda?sk"
+                        },
+                        new
+                        {
+                            Id = 28,
+                            CountryIso2 = "PL",
+                            Latitude = 51.107900000000001,
+                            Longitude = 17.038499999999999,
+                            Name = "Wroc?aw"
+                        },
+                        new
+                        {
+                            Id = 29,
+                            CountryIso2 = "CZ",
+                            Latitude = 50.075499999999998,
+                            Longitude = 14.437799999999999,
+                            Name = "Prague"
+                        },
+                        new
+                        {
+                            Id = 30,
+                            CountryIso2 = "CZ",
+                            Latitude = 49.195099999999996,
+                            Longitude = 16.6068,
+                            Name = "Brno"
+                        },
+                        new
+                        {
+                            Id = 31,
+                            CountryIso2 = "CZ",
+                            Latitude = 49.593800000000002,
+                            Longitude = 17.250900000000001,
+                            Name = "Olomouc"
+                        },
+                        new
+                        {
+                            Id = 32,
+                            CountryIso2 = "CZ",
+                            Latitude = 49.738399999999999,
+                            Longitude = 13.3736,
+                            Name = "Plze?"
+                        },
+                        new
+                        {
+                            Id = 33,
+                            CountryIso2 = "SE",
+                            Latitude = 59.329300000000003,
+                            Longitude = 18.0686,
+                            Name = "Stockholm"
+                        },
+                        new
+                        {
+                            Id = 34,
+                            CountryIso2 = "SE",
+                            Latitude = 57.7089,
+                            Longitude = 11.974600000000001,
+                            Name = "Gothenburg"
+                        },
+                        new
+                        {
+                            Id = 35,
+                            CountryIso2 = "SE",
+                            Latitude = 55.704700000000003,
+                            Longitude = 13.191000000000001,
+                            Name = "Lund"
+                        },
+                        new
+                        {
+                            Id = 36,
+                            CountryIso2 = "SE",
+                            Latitude = 59.858600000000003,
+                            Longitude = 17.6389,
+                            Name = "Uppsala"
+                        },
+                        new
+                        {
+                            Id = 37,
+                            CountryIso2 = "GR",
+                            Latitude = 37.983800000000002,
+                            Longitude = 23.727499999999999,
+                            Name = "Athens"
+                        },
+                        new
+                        {
+                            Id = 38,
+                            CountryIso2 = "GR",
+                            Latitude = 40.640099999999997,
+                            Longitude = 22.944400000000002,
+                            Name = "Thessaloniki"
+                        },
+                        new
+                        {
+                            Id = 39,
+                            CountryIso2 = "GR",
+                            Latitude = 38.246600000000001,
+                            Longitude = 21.7346,
+                            Name = "Patras"
+                        },
+                        new
+                        {
+                            Id = 40,
+                            CountryIso2 = "GR",
+                            Latitude = 35.338700000000003,
+                            Longitude = 25.144200000000001,
+                            Name = "Heraklion"
+                        });
                 });
 
             modelBuilder.Entity("ErasmusAtlas.Infrastructure.Models.Institution", b =>
@@ -102,6 +430,11 @@ namespace ErasmusAtlas.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(160)
                         .HasColumnType("nvarchar(160)");
+
+                    b.Property<string>("Topic")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)");
 
                     b.Property<string>("UserId")
                         .IsRequired()

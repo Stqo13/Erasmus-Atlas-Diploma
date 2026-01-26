@@ -14,4 +14,8 @@ public class City
     [Required]
     [StringLength(2, MinimumLength = 2)]
     public string CountryIso2 { get; set; } = null!;
+
+    public double Latitude { get; set; }
+
+    public double Longitude { get; set; }
 }

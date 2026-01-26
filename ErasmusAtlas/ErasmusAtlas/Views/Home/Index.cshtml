@@ -1,8 +1,94 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    Layout = "_LayoutDashboard";
+    ViewData["Title"] = "Dashboard";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+@section Styles {
+    <link rel="stylesheet" href="~/css/home-index.css" asp-append-version="true" />
+}
+
+<div class="content-inner">
+    <div class="dashboard-grid">
+        <div class="card kpi">
+            <div>
+                <div class="kpi-title">Total Posts</div>
+                <div class="kpi-value">250</div>
+                <div class="kpi-sub">Seeded demo content</div>
+            </div>
+            <div class="chip">Live</div>
+        </div>
+
+        <div class="card kpi">
+            <div>
+                <div class="kpi-title">Total Projects</div>
+                <div class="kpi-value">120</div>
+                <div class="kpi-sub">Across cities</div>
+            </div>
+            <div class="chip">Updated</div>
+        </div>
+
+        <div class="card kpi">
+            <div>
+                <div class="kpi-title">Institutions</div>
+                <div class="kpi-value">80</div>
+                <div class="kpi-sub">Universities & partners</div>
+            </div>
+            <div class="chip">Seeded</div>
+        </div>
+
+        <div class="card kpi">
+            <div>
+                <div class="kpi-title">Applications</div>
+                <div class="kpi-value">—</div>
+                <div class="kpi-sub">Next feature</div>
+            </div>
+            <div class="chip">Soon</div>
+        </div>
+
+        <div class="card span-2">
+            <div class="card-header">
+                <div class="section-title">Recent posts</div>
+                <div class="section-subtitle">Latest experiences shared by students</div>
+            </div>
+            <div class="card-body">
+                <div class="table">
+                    <div class="table-row table-head">
+                        <div>Title</div>
+                        <div>Topic</div>
+                        <div>Date</div>
+                    </div>
+
+                    <div class="table-row">
+                        <div>Housing tips in Rome</div>
+                        <div>Housing</div>
+                        <div>2025-01-10</div>
+                    </div>
+                    <div class="table-row">
+                        <div>Eating like a local in Paris</div>
+                        <div>Food</div>
+                        <div>2025-01-08</div>
+                    </div>
+                    <div class="table-row">
+                        <div>Weekend trips from Lisbon</div>
+                        <div>Travel</div>
+                        <div>2025-01-03</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="section-title">Quick actions</div>
+                <div class="section-subtitle">Jump into the app</div>
+            </div>
+            <div class="card-body">
+                <div class="actions-stack">
+                    <a class="btn btn-primary" asp-controller="Map" asp-action="Index">Open map</a>
+                    <a class="btn" asp-controller="Posts" asp-action="Index">Browse posts</a>
+                    <a class="btn" asp-controller="Projects" asp-action="Index">Browse projects</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

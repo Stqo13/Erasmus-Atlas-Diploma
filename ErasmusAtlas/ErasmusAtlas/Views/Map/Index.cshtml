@@ -1,0 +1,301 @@
+﻿@{
+    Layout = "_LayoutDashboard";
+    ViewData["Title"] = "Map";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/map-index.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.16.0/dist/maplibre-gl.css" />
+}
+
+<div class="content-inner map-full">
+    <div class="map-page">
+        <aside class="map-panel card">
+            <div class="map-panel-header">
+                <div class="panel-title">Explore posts</div>
+                <div class="panel-subtitle">Pan/zoom to load markers</div>
+            </div>
+
+            <div class="map-panel-body">
+                <div class="field">
+                    <label class="label" for="topic">Topic</label>
+                    <select id="topic" class="input">
+                        <option value="">All topics</option>
+                        <option value="Food">Food</option>
+                        <option value="Nightlife">Nightlife</option>
+                        <option value="Housing">Housing</option>
+                        <option value="Academics">Academics</option>
+                        <option value="Safety">Safety</option>
+                        <option value="Costs">Costs</option>
+                        <option value="Travel">Travel</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label class="label" for="cityId">City Id (optional)</label>
+                    <input id="cityId" class="input" type="number" min="1" placeholder="e.g. 12" />
+                    <div class="help">You can replace this with a City dropdown later.</div>
+                </div>
+
+                <div class="panel-actions">
+                    <button id="btnRefresh" class="btn btn-primary" type="button">Refresh</button>
+                    <button id="btnClear" class="btn" type="button">Clear</button>
+                </div>
+
+                <div id="status" class="status muted">Ready.</div>
+
+                <div class="legend">
+                    <div class="legend-dot"></div>
+                    <div class="muted">Marker size shows number of posts at the same rounded location.</div>
+                </div>
+            </div>
+        </aside>
+
+        <section class="map-canvas card">
+            <div id="map" class="map"></div>
+        </section>
+
+        <aside id="drawer" class="drawer" aria-hidden="true">
+            <div class="drawer-header">
+                <div>
+                    <div id="drawerTitle" class="drawer-title">Posts</div>
+                    <div id="drawerSub" class="drawer-sub">Select a marker</div>
+                </div>
+                <button id="drawerClose" class="icon-btn" type="button" title="Close"></button>
+            </div>
+
+            <div id="drawerBody" class="drawer-body">
+                <div class="muted">Click a marker to view the posts here.</div>
+            </div>
+        </aside>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://unpkg.com/maplibre-gl@5.16.0/dist/maplibre-gl.js"></script>
+    <script>
+        (function () {
+            const statusEl = document.getElementById("status");
+            const topicEl = document.getElementById("topic");
+            const cityIdEl = document.getElementById("cityId");
+            const refreshBtn = document.getElementById("btnRefresh");
+            const clearBtn = document.getElementById("btnClear");
+
+            const drawer = document.getElementById("drawer");
+            const drawerClose = document.getElementById("drawerClose");
+            const drawerTitle = document.getElementById("drawerTitle");
+            const drawerSub = document.getElementById("drawerSub");
+            const drawerBody = document.getElementById("drawerBody");
+
+            function openDrawer() {
+                drawer.classList.add("open");
+                drawer.setAttribute("aria-hidden", "false");
+            }
+
+            function closeDrawer() {
+                drawer.classList.remove("open");
+                drawer.setAttribute("aria-hidden", "true");
+            }
+
+            drawerClose.addEventListener("click", closeDrawer);
+
+            document.addEventListener("keydown", (e) => {
+                if (e.key === "Escape") closeDrawer();
+            });
+
+            function setStatus(msg) {
+                statusEl.textContent = msg;
+            }
+
+            const map = new maplibregl.Map({
+                container: "map",
+                style: "https://demotiles.maplibre.org/style.json",
+                center: [12.4964, 41.9028],
+                zoom: 4
+            });
+
+            map.addControl(new maplibregl.NavigationControl({ showCompass: true }), "top-right");
+
+            let markers = [];
+            let lastAbort = null;
+
+            function clearMarkers() {
+                for (const m of markers) m.remove();
+                markers = [];
+            }
+
+            function getBboxString() {
+                const b = map.getBounds();
+                return `${b.getWest()},${b.getSouth()},${b.getEast()},${b.getNorth()}`;
+            }
+
+            function buildUrl() {
+                const url = new URL(window.location.origin + "/Map/PostsMarkers");
+                url.searchParams.set("bbox", getBboxString());
+                url.searchParams.set("precision", "3");
+                url.searchParams.set("maxTotal", "1500");
+                url.searchParams.set("maxPerMarker", "25");
+                url.searchParams.set("bodyMaxLen", "350");
+
+                const topic = topicEl.value.trim();
+                if (topic) url.searchParams.set("topic", topic);
+
+                const cityId = cityIdEl.value.trim();
+                if (cityId) url.searchParams.set("cityId", cityId);
+
+                return url.toString();
+            }
+
+            function markerSize(count) {
+                if (count <= 1) return 18;
+                if (count <= 3) return 22;
+                if (count <= 7) return 26;
+                if (count <= 15) return 30;
+                return 34;
+            }
+
+            function createMarkerElement(count) {
+                const el = document.createElement("div");
+                el.className = "map-marker";
+                el.style.width = markerSize(count) + "px";
+                el.style.height = markerSize(count) + "px";
+
+                const badge = document.createElement("div");
+                badge.className = "map-marker-badge";
+                badge.textContent = String(count);
+
+                el.appendChild(badge);
+                return el;
+            }
+
+            function dominantTopic(posts) {
+                const counts = new Map();
+                for (const p of posts || []) {
+                    const t = (p.topics && p.topics.length) ? p.topics[0] : "Other";
+                    counts.set(t, (counts.get(t) || 0) + 1);
+                }
+                let best = "Other";
+                let bestCount = 0;
+                for (const [t, c] of counts.entries()) {
+                    if (c > bestCount) { best = t; bestCount = c; }
+                }
+                return best;
+            }
+
+            function topicClass(topic) {
+                switch ((topic || "").toLowerCase()) {
+                    case "food": return "topic-food";
+                    case "nightlife": return "topic-nightlife";
+                    case "housing": return "topic-housing";
+                    case "academics": return "topic-academics";
+                    case "safety": return "topic-safety";
+                    case "costs": return "topic-costs";
+                    case "travel": return "topic-travel";
+                    default: return "topic-other";
+                }
+            }
+
+            function renderDrawer(group) {
+                const posts = (group.posts || []).slice();
+                const dom = dominantTopic(posts);
+
+                drawerTitle.textContent = `Posts (${posts.length})`;
+                drawerSub.innerHTML = `<span class="drawer-badge ${topicClass(dom)}"></span>Dominant topic: ${dom} • (${Number(group.lat).toFixed(3)}, ${Number(group.lng).toFixed(3)})`;
+
+                posts.sort((a, b) => (b.created_at || "").localeCompare(a.created_at || ""));
+
+                drawerBody.innerHTML = "";
+                const list = document.createElement("div");
+                list.className = "drawer-list";
+
+                for (const p of posts) {
+                    const card = document.createElement("div");
+                    card.className = "drawer-post";
+
+                    const a = document.createElement("a");
+                    a.className = "drawer-post-title";
+                    a.href = `/Posts/Details/${p.id}`;
+                    a.textContent = p.title || "(Untitled)";
+
+                    const meta = document.createElement("div");
+                    meta.className = "drawer-post-meta";
+                    const t = (p.topics && p.topics.length) ? p.topics[0] : "";
+                    meta.textContent = `${t}${p.created_at ? " • " + p.created_at : ""}`;
+
+                    card.appendChild(a);
+                    card.appendChild(meta);
+
+                    if (p.body) {
+                        const body = document.createElement("div");
+                        body.className = "drawer-post-body";
+                        body.textContent = p.body;
+                        card.appendChild(body);
+                    }
+
+                    list.appendChild(card);
+                }
+
+                drawerBody.appendChild(list);
+                openDrawer();
+            }
+
+            async function loadMarkers() {
+                if (lastAbort) lastAbort.abort();
+                lastAbort = new AbortController();
+
+                const url = buildUrl();
+                setStatus("Loading markers...");
+
+                try {
+                    const res = await fetch(url, { signal: lastAbort.signal, headers: { "Accept": "application/json" } });
+                    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+                    const data = await res.json();
+                    const items = data.items || [];
+
+                    clearMarkers();
+
+                    for (const g of items) {
+                        const count = (g.posts && g.posts.length) ? g.posts.length : 0;
+                        const dom = dominantTopic(g.posts);
+
+                        const el = createMarkerElement(count);
+                        el.classList.add(topicClass(dom));
+
+                        const m = new maplibregl.Marker({ element: el })
+                            .setLngLat([g.lng, g.lat])
+                            .addTo(map);
+
+                        el.addEventListener("click", (ev) => {
+                            ev.stopPropagation();
+                            renderDrawer(g);
+                        });
+
+                        markers.push(m);
+                    }
+
+                    setStatus(`Loaded ${items.length} marker(s).`);
+                } catch (e) {
+                    if (e && e.name === "AbortError") return;
+                    console.error(e);
+                    setStatus("Failed to load markers. Check console.");
+                }
+            }
+
+            let debounceTimer = null;
+            function scheduleLoad() {
+                if (debounceTimer) clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(loadMarkers, 250);
+            }
+
+            map.on("load", () => loadMarkers());
+            map.on("moveend", () => scheduleLoad());
+            map.on("click", () => closeDrawer());
+
+            refreshBtn.addEventListener("click", () => loadMarkers());
+            clearBtn.addEventListener("click", () => { clearMarkers(); closeDrawer(); setStatus("Cleared."); });
+
+            topicEl.addEventListener("change", () => loadMarkers());
+        })();
+    </script>
+}

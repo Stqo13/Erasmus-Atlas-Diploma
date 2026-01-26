@@ -1,0 +1,292 @@
+﻿.map-full {
+    max-width: none;
+    width: 100%;
+}
+
+.map-page {
+    display: grid;
+    grid-template-columns: 360px minmax(0,1fr);
+    gap: 16px;
+    height: calc(100vh - 120px);
+    min-height: 560px;
+}
+
+.map-panel {
+    grid-column: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.map-panel-header {
+    padding: 16px 16px 0 16px;
+}
+
+.panel-title {
+    font-weight: 950;
+    color: var(--brand-dark);
+    font-size: 16px;
+}
+
+.panel-subtitle {
+    margin-top: 8px;
+    color: var(--muted);
+    font-weight: 700;
+    font-size: 13px;
+}
+
+.map-panel-body {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-height: 0;
+    overflow: auto;
+}
+
+.panel-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 4px;
+}
+
+.status {
+    margin-top: 6px;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: #FBFCFE;
+    font-weight: 800;
+}
+
+.legend {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 999px;
+    background: var(--brand);
+    box-shadow: 0 0 0 4px rgba(0,127,199,.12);
+}
+
+.map-canvas {
+    grid-column: 2;
+    height: 100%;
+    min-height: 560px;
+    overflow: hidden;
+    display: flex;
+}
+
+.map {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    min-height: 560px;
+}
+
+.drawer {
+    position: fixed;
+    right: 18px;
+    top: 88px;
+    bottom: 18px;
+    width: 420px;
+    z-index: 10;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(8px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .15s ease, transform .15s ease;
+}
+
+    .drawer.open {
+        transform: translateX(0);
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+.drawer-header {
+    padding: 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.drawer-title {
+    font-weight: 950;
+    color: var(--brand-dark);
+}
+
+.drawer-sub {
+    margin-top: 6px;
+    color: var(--muted);
+    font-weight: 800;
+    font-size: 12px;
+}
+
+.drawer-body {
+    padding: 16px;
+    overflow: auto;
+}
+
+.drawer-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.drawer-post {
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 12px;
+    background: #FBFCFE;
+}
+
+.drawer-post-title {
+    display: block;
+    font-weight: 950;
+    color: var(--brand-dark);
+}
+
+.drawer-post-meta {
+    margin-top: 6px;
+    color: var(--muted);
+    font-weight: 850;
+    font-size: 12px;
+}
+
+.drawer-post-body {
+    margin-top: 10px;
+    color: var(--text);
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.map-marker {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    border: 2px solid rgba(255,255,255,.9);
+    box-shadow: 0 10px 22px rgba(15,23,42,.18);
+    cursor: pointer;
+    background: rgba(0,127,199,.95);
+}
+
+.map-marker-badge {
+    color: white;
+    font-weight: 950;
+    font-size: 12px;
+    transform: translateY(-.5px);
+}
+
+.map-marker.topic-food {
+    background: #16a34a;
+}
+
+.map-marker.topic-nightlife {
+    background: #7c3aed;
+}
+
+.map-marker.topic-housing {
+    background: #0ea5e9;
+}
+
+.map-marker.topic-academics {
+    background: #f97316;
+}
+
+.map-marker.topic-safety {
+    background: #dc2626;
+}
+
+.map-marker.topic-costs {
+    background: #0f766e;
+}
+
+.map-marker.topic-travel {
+    background: #2563eb;
+}
+
+.map-marker.topic-other {
+    background: rgba(0,127,199,.95);
+}
+
+.drawer-badge {
+    width: 12px;
+    height: 12px;
+    border-radius: 999px;
+    display: inline-block;
+    margin-right: 8px;
+    transform: translateY(1px);
+}
+
+.drawer-badge.topic-food {
+    background: #16a34a;
+}
+
+.drawer-badge.topic-nightlife {
+    background: #7c3aed;
+}
+
+.drawer-badge.topic-housing {
+    background: #0ea5e9;
+}
+
+.drawer-badge.topic-academics {
+    background: #f97316;
+}
+
+.drawer-badge.topic-safety {
+    background: #dc2626;
+}
+
+.drawer-badge.topic-costs {
+    background: #0f766e;
+}
+
+.drawer-badge.topic-travel {
+    background: #2563eb;
+}
+
+.drawer-badge.topic-other {
+    background: rgba(0,127,199,.95);
+}
+
+@media (max-width:760px) {
+    .map-page {
+        grid-template-columns: 1fr;
+        height: auto;
+        min-height: 0;
+    }
+
+    .map-panel {
+        grid-column: auto;
+    }
+
+    .map-canvas {
+        grid-column: auto;
+        height: 70vh;
+        min-height: 520px;
+    }
+
+    .drawer {
+        left: 18px;
+        right: 18px;
+        width: auto;
+    }
+}
