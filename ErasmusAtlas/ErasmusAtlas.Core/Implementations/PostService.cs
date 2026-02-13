@@ -48,8 +48,10 @@ public class PostService(
         return posts;
     }
 
-    public Task<PostDetailsViewModel> GetByIdAsync(Guid id)
+    public async Task<PostDetailsViewModel> GetByIdAsync(Guid id)
     {
-        throw new NotImplementedException();
+        var posts = await postsRepository
+            .GetAllAttached()
+            .Include()
     }
 }
