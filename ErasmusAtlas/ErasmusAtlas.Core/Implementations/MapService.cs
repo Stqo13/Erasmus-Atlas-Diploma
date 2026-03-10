@@ -12,7 +12,7 @@ using ErasmusAtlas.Infrastructure.Repository.Interfaces;
 namespace ErasmusAtlas.Core.Implementations;
 
 public class MapService(
-    IRepository<Post, Guid> postsRepository) 
+    IRepository<Post, Guid> postsRepository)
     : IMapService
 {
     public async Task<PostMapMarkersResponseViewModel> GetPostMapMarkersAsync(PostMapMarkersRequestViewModel request)
@@ -37,11 +37,12 @@ public class MapService(
 
         if (!string.IsNullOrWhiteSpace(request.Topic))
         {
-            query = query.Where(p => p.Topic == request.Topic);
+            query = query.Where(p =>
+                p.PostTopics.Any(pt => pt.Topic.Name == request.Topic));
         }
 
         if (!string.IsNullOrWhiteSpace(request.BoundingBox) &&
-            TryParseBoundingBox(request.BoundingBox!, out var bbox))
+            TryParseBoundingBox(request.BoundingBox, out var bbox))
         {
             var gf = NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326);
             var polygon = CreateBboxPolygon(gf, bbox.minLng, bbox.minLat, bbox.maxLng, bbox.maxLat);
@@ -50,19 +51,22 @@ public class MapService(
         }
 
         var raw = await query
-           .OrderByDescending(p => p.CreatedAt)
-           .Select(p => new
-           {
-               p.Id,
-               p.Title,
-               p.Body,
-               p.Topic,
-               p.CreatedAt,
-               Lat = p.Location!.Y,
-               Lng = p.Location!.X 
-           })
-           .Take(maxTotal)
-           .ToListAsync();
+            .OrderByDescending(p => p.CreatedAt)
+            .Select(p => new
+            {
+                p.Id,
+                p.Title,
+                p.Body,
+                p.CreatedAt,
+                Lat = p.Location!.Y,
+                Lng = p.Location!.X,
+                Topics = p.PostTopics
+                    .Select(pt => pt.Topic.Name)
+                    .OrderBy(t => t)
+                    .ToList()
+            })
+            .Take(maxTotal)
+            .ToListAsync();
 
         var items = raw
             .GroupBy(x => new
@@ -79,25 +83,45 @@ public class MapService(
                     {
                         Id = p.Id,
                         Title = p.Title,
-                        Body = request.PostBodyMaxLength > 0 ? TrimToLength(p.Body, request.PostBodyMaxLength) : null,
-                        Topics = new List<string> { p.Topic },
+                        Body = request.PostBodyMaxLength > 0
+                            ? TrimToLength(p.Body, request.PostBodyMaxLength)
+                            : null,
+                        Topics = p.Topics,
                         CreatedAt = p.CreatedAt.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)
                     })
                     .ToList()
             })
             .ToList();
 
-        return new PostMapMarkersResponseViewModel { Items = items };
+        return new PostMapMarkersResponseViewModel
+        {
+            Items = items
+        };
     }
 
     private static string? TrimToLength(string? value, int maxLen)
     {
-        if (string.IsNullOrWhiteSpace(value)) return value;
-        if (maxLen <= 0) return null;
-        return value.Length <= maxLen ? value : value[..maxLen];
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return value;
+        }
+
+        if (maxLen <= 0)
+        {
+            return null;
+        }
+
+        return value.Length <= maxLen
+            ? value
+            : value[..maxLen];
     }
 
-    private static Polygon CreateBboxPolygon(GeometryFactory gf, double minLng, double minLat, double maxLng, double maxLat)
+    private static Polygon CreateBboxPolygon(
+        GeometryFactory gf,
+        double minLng,
+        double minLat,
+        double maxLng,
+        double maxLat)
     {
         var coords = new[]
         {
@@ -111,20 +135,47 @@ public class MapService(
         return gf.CreatePolygon(coords);
     }
 
-    private static bool TryParseBoundingBox(string bbox, out (double minLng, double minLat, double maxLng, double maxLat) result)
+    private static bool TryParseBoundingBox(
+        string bbox,
+        out (double minLng, double minLat, double maxLng, double maxLat) result)
     {
         result = default;
 
         var parts = bbox.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-        if (parts.Length != 4) return false;
+        if (parts.Length != 4)
+        {
+            return false;
+        }
 
-        if (!double.TryParse(parts[0], NumberStyles.Float, CultureInfo.InvariantCulture, out var minLng)) return false;
-        if (!double.TryParse(parts[1], NumberStyles.Float, CultureInfo.InvariantCulture, out var minLat)) return false;
-        if (!double.TryParse(parts[2], NumberStyles.Float, CultureInfo.InvariantCulture, out var maxLng)) return false;
-        if (!double.TryParse(parts[3], NumberStyles.Float, CultureInfo.InvariantCulture, out var maxLat)) return false;
+        if (!double.TryParse(parts[0], NumberStyles.Float, CultureInfo.InvariantCulture, out var minLng))
+        {
+            return false;
+        }
 
-        if (minLat < -90 || minLat > 90 || maxLat < -90 || maxLat > 90) return false;
-        if (minLng < -180 || minLng > 180 || maxLng < -180 || maxLng > 180) return false;
+        if (!double.TryParse(parts[1], NumberStyles.Float, CultureInfo.InvariantCulture, out var minLat))
+        {
+            return false;
+        }
+
+        if (!double.TryParse(parts[2], NumberStyles.Float, CultureInfo.InvariantCulture, out var maxLng))
+        {
+            return false;
+        }
+
+        if (!double.TryParse(parts[3], NumberStyles.Float, CultureInfo.InvariantCulture, out var maxLat))
+        {
+            return false;
+        }
+
+        if (minLat < -90 || minLat > 90 || maxLat < -90 || maxLat > 90)
+        {
+            return false;
+        }
+
+        if (minLng < -180 || minLng > 180 || maxLng < -180 || maxLng > 180)
+        {
+            return false;
+        }
 
         result = (minLng, minLat, maxLng, maxLat);
         return true;

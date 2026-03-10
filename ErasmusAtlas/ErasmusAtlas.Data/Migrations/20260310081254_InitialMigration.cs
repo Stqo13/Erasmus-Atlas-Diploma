@@ -99,6 +99,19 @@ namespace ErasmusAtlas.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Topics",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Topics", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -231,7 +244,6 @@ namespace ErasmusAtlas.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(160)", maxLength: 160, nullable: false),
                     Body = table.Column<string>(type: "nvarchar(max)", maxLength: 8000, nullable: false),
-                    Topic = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
                     Status = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Location = table.Column<Point>(type: "geography", nullable: true),
@@ -284,6 +296,30 @@ namespace ErasmusAtlas.Infrastructure.Migrations
                         name: "FK_Projects_ProjectTypes_ProjectTypeId",
                         column: x => x.ProjectTypeId,
                         principalTable: "ProjectTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PostTopics",
+                columns: table => new
+                {
+                    PostId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TopicId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PostTopics", x => new { x.PostId, x.TopicId });
+                    table.ForeignKey(
+                        name: "FK_PostTopics_Posts_PostId",
+                        column: x => x.PostId,
+                        principalTable: "Posts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PostTopics_Topics_TopicId",
+                        column: x => x.TopicId,
+                        principalTable: "Topics",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -415,6 +451,25 @@ namespace ErasmusAtlas.Infrastructure.Migrations
                     { 8, "Law" }
                 });
 
+            migrationBuilder.InsertData(
+                table: "Topics",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Housing" },
+                    { 2, "Food" },
+                    { 3, "Transport" },
+                    { 4, "Nightlife" },
+                    { 5, "University" },
+                    { 6, "Internship" },
+                    { 7, "Warning" },
+                    { 8, "Recommendation" },
+                    { 9, "Culture" },
+                    { 10, "Costs" },
+                    { 11, "General" },
+                    { 12, "Travel" }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -468,6 +523,11 @@ namespace ErasmusAtlas.Infrastructure.Migrations
                 name: "IX_Posts_UserId",
                 table: "Posts",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PostTopics_TopicId",
+                table: "PostTopics",
+                column: "TopicId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProjectApplications_ProjectId",
@@ -531,7 +591,7 @@ namespace ErasmusAtlas.Infrastructure.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Posts");
+                name: "PostTopics");
 
             migrationBuilder.DropTable(
                 name: "ProjectApplications");
@@ -543,13 +603,19 @@ namespace ErasmusAtlas.Infrastructure.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Posts");
+
+            migrationBuilder.DropTable(
+                name: "Topics");
 
             migrationBuilder.DropTable(
                 name: "Projects");
 
             migrationBuilder.DropTable(
                 name: "Tags");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "Institutions");

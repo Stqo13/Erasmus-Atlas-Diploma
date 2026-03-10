@@ -21,12 +21,17 @@
                     <label class="label" for="topic">Topic</label>
                     <select id="topic" class="input">
                         <option value="">All topics</option>
-                        <option value="Food">Food</option>
-                        <option value="Nightlife">Nightlife</option>
                         <option value="Housing">Housing</option>
-                        <option value="Academics">Academics</option>
-                        <option value="Safety">Safety</option>
+                        <option value="Food">Food</option>
+                        <option value="Transport">Transport</option>
+                        <option value="Nightlife">Nightlife</option>
+                        <option value="University">University</option>
+                        <option value="Internship">Internship</option>
+                        <option value="Warning">Warning</option>
+                        <option value="Recommendation">Recommendation</option>
+                        <option value="Culture">Culture</option>
                         <option value="Costs">Costs</option>
+                        <option value="General">General</option>
                         <option value="Travel">Travel</option>
                     </select>
                 </div>
@@ -100,7 +105,9 @@
             drawerClose.addEventListener("click", closeDrawer);
 
             document.addEventListener("keydown", (e) => {
-                if (e.key === "Escape") closeDrawer();
+                if (e.key === "Escape") {
+                    closeDrawer();
+                }
             });
 
             function setStatus(msg) {
@@ -120,7 +127,9 @@
             let lastAbort = null;
 
             function clearMarkers() {
-                for (const m of markers) m.remove();
+                for (const m of markers) {
+                    m.remove();
+                }
                 markers = [];
             }
 
@@ -131,6 +140,7 @@
 
             function buildUrl() {
                 const url = new URL(window.location.origin + "/Map/PostsMarkers");
+
                 url.searchParams.set("bbox", getBboxString());
                 url.searchParams.set("precision", "3");
                 url.searchParams.set("maxTotal", "1500");
@@ -138,10 +148,14 @@
                 url.searchParams.set("bodyMaxLen", "350");
 
                 const topic = topicEl.value.trim();
-                if (topic) url.searchParams.set("topic", topic);
+                if (topic) {
+                    url.searchParams.set("topic", topic);
+                }
 
                 const cityId = cityIdEl.value.trim();
-                if (cityId) url.searchParams.set("cityId", cityId);
+                if (cityId) {
+                    url.searchParams.set("cityId", cityId);
+                }
 
                 return url.toString();
             }
@@ -170,15 +184,23 @@
 
             function dominantTopic(posts) {
                 const counts = new Map();
+
                 for (const p of posts || []) {
-                    const t = (p.topics && p.topics.length) ? p.topics[0] : "Other";
-                    counts.set(t, (counts.get(t) || 0) + 1);
+                    for (const t of (p.topics || [])) {
+                        counts.set(t, (counts.get(t) || 0) + 1);
+                    }
                 }
+
                 let best = "Other";
                 let bestCount = 0;
+
                 for (const [t, c] of counts.entries()) {
-                    if (c > bestCount) { best = t; bestCount = c; }
+                    if (c > bestCount) {
+                        best = t;
+                        bestCount = c;
+                    }
                 }
+
                 return best;
             }
 
@@ -187,9 +209,14 @@
                     case "food": return "topic-food";
                     case "nightlife": return "topic-nightlife";
                     case "housing": return "topic-housing";
-                    case "academics": return "topic-academics";
-                    case "safety": return "topic-safety";
+                    case "transport": return "topic-transport";
+                    case "university": return "topic-university";
+                    case "internship": return "topic-internship";
+                    case "warning": return "topic-warning";
+                    case "recommendation": return "topic-recommendation";
+                    case "culture": return "topic-culture";
                     case "costs": return "topic-costs";
+                    case "general": return "topic-general";
                     case "travel": return "topic-travel";
                     default: return "topic-other";
                 }
@@ -202,9 +229,10 @@
                 drawerTitle.textContent = `Posts (${posts.length})`;
                 drawerSub.innerHTML = `<span class="drawer-badge ${topicClass(dom)}"></span>Dominant topic: ${dom} • (${Number(group.lat).toFixed(3)}, ${Number(group.lng).toFixed(3)})`;
 
-                posts.sort((a, b) => (b.created_at || "").localeCompare(a.created_at || ""));
+                posts.sort((a, b) => (b.createdAt || "").localeCompare(a.createdAt || ""));
 
                 drawerBody.innerHTML = "";
+
                 const list = document.createElement("div");
                 list.className = "drawer-list";
 
@@ -214,13 +242,17 @@
 
                     const a = document.createElement("a");
                     a.className = "drawer-post-title";
-                    a.href = `/Posts/Details/${p.id}`;
+                    a.href = `/Post/Details/${p.id}`;
                     a.textContent = p.title || "(Untitled)";
 
                     const meta = document.createElement("div");
                     meta.className = "drawer-post-meta";
-                    const t = (p.topics && p.topics.length) ? p.topics[0] : "";
-                    meta.textContent = `${t}${p.created_at ? " • " + p.created_at : ""}`;
+
+                    const topicText = (p.topics && p.topics.length)
+                        ? p.topics.join(", ")
+                        : "No topics";
+
+                    meta.textContent = `${topicText}${p.createdAt ? " • " + p.createdAt : ""}`;
 
                     card.appendChild(a);
                     card.appendChild(meta);
@@ -240,15 +272,24 @@
             }
 
             async function loadMarkers() {
-                if (lastAbort) lastAbort.abort();
+                if (lastAbort) {
+                    lastAbort.abort();
+                }
+
                 lastAbort = new AbortController();
 
                 const url = buildUrl();
                 setStatus("Loading markers...");
 
                 try {
-                    const res = await fetch(url, { signal: lastAbort.signal, headers: { "Accept": "application/json" } });
-                    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                    const res = await fetch(url, {
+                        signal: lastAbort.signal,
+                        headers: { "Accept": "application/json" }
+                    });
+
+                    if (!res.ok) {
+                        throw new Error(`HTTP ${res.status}`);
+                    }
 
                     const data = await res.json();
                     const items = data.items || [];
@@ -276,15 +317,22 @@
 
                     setStatus(`Loaded ${items.length} marker(s).`);
                 } catch (e) {
-                    if (e && e.name === "AbortError") return;
+                    if (e && e.name === "AbortError") {
+                        return;
+                    }
+
                     console.error(e);
                     setStatus("Failed to load markers. Check console.");
                 }
             }
 
             let debounceTimer = null;
+
             function scheduleLoad() {
-                if (debounceTimer) clearTimeout(debounceTimer);
+                if (debounceTimer) {
+                    clearTimeout(debounceTimer);
+                }
+
                 debounceTimer = setTimeout(loadMarkers, 250);
             }
 
@@ -293,7 +341,12 @@
             map.on("click", () => closeDrawer());
 
             refreshBtn.addEventListener("click", () => loadMarkers());
-            clearBtn.addEventListener("click", () => { clearMarkers(); closeDrawer(); setStatus("Cleared."); });
+
+            clearBtn.addEventListener("click", () => {
+                clearMarkers();
+                closeDrawer();
+                setStatus("Cleared.");
+            });
 
             topicEl.addEventListener("change", () => loadMarkers());
         })();

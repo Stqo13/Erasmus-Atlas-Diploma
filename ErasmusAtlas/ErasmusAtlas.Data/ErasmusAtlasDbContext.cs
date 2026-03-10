@@ -20,7 +20,9 @@ public class ErasmusAtlasDbContext : IdentityDbContext
     public virtual DbSet<Institution> Institutions { get; set; }
     public virtual DbSet<ProjectApplication> ProjectApplications { get; set; }
     public virtual DbSet<Tag> Tags { get; set; }
+    public virtual DbSet<Topic> Topics { get; set; }
     public virtual DbSet<ProjectTag> ProjectTags { get; set; }
+    public virtual DbSet<PostTopic> PostTopics { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

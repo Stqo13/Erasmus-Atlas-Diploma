@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ErasmusAtlas.Controllers;
 
-public class PostController(
+public class PostsController(
     IPostService postService)
     : Controller
 {
@@ -24,14 +24,5 @@ public class PostController(
             ModelState.AddModelError("Unable to find posts!", ex.Message);
             return RedirectToAction("Error", "Home", new { code = 404 });
         }
-    }
-
-    [HttpGet]
-    public async Task<IActionResult> Details(Guid id)
-    {
-        var model = await postService 
-            .GetByIdAsync(id);
-
-        return View(model);
     }
 }

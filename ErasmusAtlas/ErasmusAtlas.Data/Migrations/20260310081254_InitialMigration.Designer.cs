@@ -13,7 +13,7 @@ using NetTopologySuite.Geometries;
 namespace ErasmusAtlas.Infrastructure.Migrations
 {
     [DbContext(typeof(ErasmusAtlasDbContext))]
-    [Migration("20260126171321_InitialMigration")]
+    [Migration("20260310081254_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -434,11 +434,6 @@ namespace ErasmusAtlas.Infrastructure.Migrations
                         .HasMaxLength(160)
                         .HasColumnType("nvarchar(160)");
 
-                    b.Property<string>("Topic")
-                        .IsRequired()
-                        .HasMaxLength(40)
-                        .HasColumnType("nvarchar(40)");
-
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -450,6 +445,21 @@ namespace ErasmusAtlas.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Posts");
+                });
+
+            modelBuilder.Entity("ErasmusAtlas.Infrastructure.Models.PostTopic", b =>
+                {
+                    b.Property<Guid>("PostId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("TopicId")
+                        .HasColumnType("int");
+
+                    b.HasKey("PostId", "TopicId");
+
+                    b.HasIndex("TopicId");
+
+                    b.ToTable("PostTopics");
                 });
 
             modelBuilder.Entity("ErasmusAtlas.Infrastructure.Models.Project", b =>
@@ -656,6 +666,86 @@ namespace ErasmusAtlas.Infrastructure.Migrations
                         {
                             Id = 8,
                             Name = "Law"
+                        });
+                });
+
+            modelBuilder.Entity("ErasmusAtlas.Infrastructure.Models.Topic", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Topics");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Housing"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Food"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Transport"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Nightlife"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "University"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Internship"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "Warning"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "Recommendation"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Name = "Culture"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Name = "Costs"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Name = "General"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Name = "Travel"
                         });
                 });
 
@@ -907,6 +997,25 @@ namespace ErasmusAtlas.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("ErasmusAtlas.Infrastructure.Models.PostTopic", b =>
+                {
+                    b.HasOne("ErasmusAtlas.Infrastructure.Models.Post", "Post")
+                        .WithMany("PostTopics")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ErasmusAtlas.Infrastructure.Models.Topic", "Topic")
+                        .WithMany("PostTopics")
+                        .HasForeignKey("TopicId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Post");
+
+                    b.Navigation("Topic");
+                });
+
             modelBuilder.Entity("ErasmusAtlas.Infrastructure.Models.Project", b =>
                 {
                     b.HasOne("ErasmusAtlas.Infrastructure.Models.City", "City")
@@ -1017,6 +1126,16 @@ namespace ErasmusAtlas.Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("ErasmusAtlas.Infrastructure.Models.Post", b =>
+                {
+                    b.Navigation("PostTopics");
+                });
+
+            modelBuilder.Entity("ErasmusAtlas.Infrastructure.Models.Topic", b =>
+                {
+                    b.Navigation("PostTopics");
                 });
 #pragma warning restore 612, 618
         }

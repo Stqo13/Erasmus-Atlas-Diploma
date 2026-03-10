@@ -1,0 +1,50 @@
+[
+  {
+    "Id": 1,
+    "Name": "Housing"
+  },
+  {
+    "Id": 2,
+    "Name": "Food"
+  },
+  {
+    "Id": 3,
+    "Name": "Transport"
+  },
+  {
+    "Id": 4,
+    "Name": "Nightlife"
+  },
+  {
+    "Id": 5,
+    "Name": "University"
+  },
+  {
+    "Id": 6,
+    "Name": "Internship"
+  },
+  {
+    "Id": 7,
+    "Name": "Warning"
+  },
+  {
+    "Id": 8,
+    "Name": "Recommendation"
+  },
+  {
+    "Id": 9,
+    "Name": "Culture"
+  },
+  {
+    "Id": 10,
+    "Name": "Costs"
+  },
+  {
+    "Id": 11,
+    "Name": "General"
+  },
+  {
+    "Id": 12,
+    "Name": "Travel"
+  }
+]

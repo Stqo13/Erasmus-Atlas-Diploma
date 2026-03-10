@@ -37,7 +37,7 @@ public static class PostSeeder
 
     private static readonly string[] Topics =
     [
-        "Food", "Nightlife", "Housing", "Academics", "Safety", "Costs", "Travel"
+        "Food", "Nightlife", "Housing", "University", "Warning", "Costs", "Travel"
     ];
 
     private static string TopicFor(int i) => Topics[i % Topics.Length];
@@ -68,7 +68,7 @@ public static class PostSeeder
             "University portals are safer than random listings.",
             "Check whether utilities are included to avoid surprises.",
         ],
-        ["Academics"] =
+        ["University"] =
         [
             "Professors are approachable and helpful to exchange students.",
             "Attendance and participation influence grades more than I expected.",
@@ -76,7 +76,7 @@ public static class PostSeeder
             "Group work is common and helps you meet locals.",
             "Campus Wi-Fi is fast and reliable, even outdoors.",
         ],
-        ["Safety"] =
+        ["Warning"] =
         [
             "The city feels safe with normal common-sense habits.",
             "Public transport is well-lit and monitored.",
@@ -104,7 +104,6 @@ public static class PostSeeder
 
     private static readonly Dictionary<string, string[]> CitySnippets = new()
     {
-        // ES
         ["Madrid"] =
         [
             "I studied near Complutense University and often walked through Retiro Park between classes.",
@@ -130,7 +129,6 @@ public static class PostSeeder
             "Plaza de España is an amazing spot to unwind after group meetings.",
         ],
 
-        // IT
         ["Rome"] =
         [
             "Sapienza University’s campus is busy but well organized; Termini is a quick hop away.",
@@ -156,7 +154,6 @@ public static class PostSeeder
             "Oltrarno cafés are calmer for reading days.",
         ],
 
-        // FR
         ["Paris"] =
         [
             "Libraries near Sorbonne fill up fast before exams.",
@@ -182,7 +179,6 @@ public static class PostSeeder
             "Garonne riverside paths made bike commutes easy.",
         ],
 
-        // DE
         ["Berlin"] =
         [
             "Humboldt University seminars were close to Museum Island.",
@@ -208,7 +204,6 @@ public static class PostSeeder
             "The old town is calm and student-friendly.",
         ],
 
-        // PT
         ["Lisbon"] =
         [
             "Universidade de Lisboa orientation was clear and concise.",
@@ -234,7 +229,6 @@ public static class PostSeeder
             "The historic center is calm and friendly.",
         ],
 
-        // NL
         ["Amsterdam"] =
         [
             "The UvA buildings around the canals are beautiful and practical.",
@@ -260,7 +254,6 @@ public static class PostSeeder
             "The botanical garden is a great reading spot.",
         ],
 
-        // PL
         ["Warsaw"] =
         [
             "University of Warsaw buildings around Krakowskie Przedmieście are central.",
@@ -286,7 +279,6 @@ public static class PostSeeder
             "Rynek is busy but comfortable after tutorials.",
         ],
 
-        // CZ
         ["Prague"] =
         [
             "Charles University sites around the old town are inspiring.",
@@ -312,7 +304,6 @@ public static class PostSeeder
             "Parks around the city are safe and green.",
         ],
 
-        // SE
         ["Stockholm"] =
         [
             "KTH and SU campuses are modern and bright.",
@@ -338,7 +329,6 @@ public static class PostSeeder
             "Biking around campus felt safe and simple.",
         ],
 
-        // GR
         ["Athens"] =
         [
             "National and Kapodistrian University campuses are welcoming.",
@@ -387,13 +377,13 @@ public static class PostSeeder
                 $"Renting in {city}: what I learned",
                 $"Room hunting tips for {city}",
             ],
-            ["Academics"] =
+            ["University"] =
             [
                 $"Study rhythms on campus in {city}",
                 $"How classes work in {city}",
                 $"Academic life I found in {city}",
             ],
-            ["Safety"] =
+            ["Warning"] =
             [
                 $"How safe {city} felt to me",
                 $"Getting around {city} safely",
@@ -438,61 +428,86 @@ public static class PostSeeder
         return baseText;
     }
 
-    /// <summary>
-    /// Seeds 250 generated posts, distributed across all cities deterministically.
-    /// Only runs if there are no posts.
-    /// </summary>
     public static async Task SeedPostsAsync(ErasmusAtlasDbContext db, IReadOnlyList<string> userIds)
     {
         if (userIds == null || userIds.Count == 0)
+        {
             throw new ArgumentException("userIds must contain at least one user.");
+        }
 
         if (await db.Posts.AnyAsync())
+        {
             return;
+        }
 
         var cities = await db.Cities
             .OrderBy(c => c.Id)
             .ToListAsync();
 
         if (cities.Count == 0)
+        {
             throw new Exception("No cities found. Seed cities first.");
+        }
+
+        var topicsByName = await db.Topics
+            .AsNoTracking()
+            .ToDictionaryAsync(t => t.Name, t => t.Id);
+
+        var missingTopics = Topics
+            .Where(t => !topicsByName.ContainsKey(t))
+            .ToList();
+
+        if (missingTopics.Count > 0)
+        {
+            throw new Exception($"Missing seeded topics: {string.Join(", ", missingTopics)}");
+        }
 
         const int total = 250;
         var rng = new Mulberry32(9090);
 
-        var n = cities.Count;
-        var perCity = total / n;
-        var remainder = total - perCity * n;
+        int n = cities.Count;
+        int perCity = total / n;
+        int remainder = total - perCity * n;
 
         var posts = new List<Post>(total);
-        var inserted = 0;
+        var postTopics = new List<PostTopic>(total);
+
+        int inserted = 0;
 
         for (int ci = 0; ci < n; ci++)
         {
             var city = cities[ci];
-            var count = perCity + (remainder > 0 ? 1 : 0);
+            int count = perCity + (remainder > 0 ? 1 : 0);
             if (remainder > 0) remainder--;
 
             for (int k = 0; k < count; k++)
             {
-                var topic = TopicFor(inserted);
-                var title = MakeTitle(rng, city.Name, topic);
-                var body = ComposeBody(topic, city.Name, ci, k);
+                string topicName = TopicFor(inserted);
+                int topicId = topicsByName[topicName];
 
-                var dayOffset = (int)Math.Floor(rng.NextDouble() * 150.0);
+                string title = MakeTitle(rng, city.Name, topicName);
+                string body = ComposeBody(topicName, city.Name, ci, k);
+
+                int dayOffset = (int)Math.Floor(rng.NextDouble() * 150.0);
+
+                var postId = Guid.NewGuid();
 
                 posts.Add(new Post
                 {
-                    Id = Guid.NewGuid(),
+                    Id = postId,
                     UserId = userIds[inserted % userIds.Count],
                     CityId = city.Id,
                     Title = title,
                     Body = body,
-                    Topic = topic,
                     Status = "Published",
                     CreatedAt = DateTime.UtcNow.AddDays(-dayOffset),
-
                     Location = new Point(city.Longitude, city.Latitude) { SRID = 4326 }
+                });
+
+                postTopics.Add(new PostTopic
+                {
+                    PostId = postId,
+                    TopicId = topicId
                 });
 
                 inserted++;
@@ -500,6 +515,7 @@ public static class PostSeeder
         }
 
         await db.Posts.AddRangeAsync(posts);
+        await db.PostTopics.AddRangeAsync(postTopics);
         await db.SaveChangesAsync();
     }
 }
