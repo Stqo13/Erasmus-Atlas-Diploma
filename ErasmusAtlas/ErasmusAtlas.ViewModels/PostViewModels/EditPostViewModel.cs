@@ -2,8 +2,10 @@
 
 namespace ErasmusAtlas.ViewModels.PostViewModels;
 
-public class CreatePostViewModel
+public class EditPostViewModel
 {
+    public Guid Id { get; set; }
+
     [Required]
     [StringLength(160, MinimumLength = 5)]
     public string Title { get; set; } = null!;
