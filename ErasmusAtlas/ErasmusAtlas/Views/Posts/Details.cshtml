@@ -1,0 +1,82 @@
+﻿@model ErasmusAtlas.ViewModels.PostViewModels.PostDetailsViewModel
+
+@{
+    Layout = "_LayoutDashboard";
+    ViewData["Title"] = "Post Details";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/posts-details.css" asp-append-version="true" />
+}
+
+<div class="content-inner post-details-page">
+    <div class="post-details-grid">
+        <section class="card">
+            <div class="card-body">
+                <div class="details-meta-top">
+                    <span class="details-city">@Model.City</span>
+                    <span class="details-date">@Model.CreatedOn.ToString("dd MMM yyyy")</span>
+                </div>
+
+                <h2 class="h1 details-title">@Model.Title</h2>
+
+                <div class="post-topics">
+                    @foreach (var topic in Model.Topics)
+                    {
+                        <span class="topic-pill">@topic</span>
+                    }
+                </div>
+
+                <div class="details-author muted">
+                    Posted by <strong>@Model.AuthorName</strong>
+                </div>
+
+                <div class="details-body">
+                    @Model.Body
+                </div>
+
+                @if (Model.Latitude.HasValue && Model.Longitude.HasValue)
+                {
+                    <div class="details-location muted">
+                        Coordinates: @Model.Latitude.Value.ToString("F5"), @Model.Longitude.Value.ToString("F5")
+                    </div>
+                }
+
+                <div class="actions">
+                    <a asp-controller="Posts" asp-action="Index" class="btn">Back to Posts</a>
+
+                    @if (Model.CanEdit)
+                    {
+                        <a asp-controller="Posts" asp-action="Edit" asp-route-id="@Model.Id" class="btn">Edit</a>
+                        <a asp-controller="Posts" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-primary">Delete</a>
+                    }
+                </div>
+            </div>
+        </section>
+
+        <aside class="card">
+            <div class="card-body">
+                <h3 class="side-title">Post Info</h3>
+
+                <div class="info-list">
+                    <div class="info-row">
+                        <span class="info-label">City</span>
+                        <span class="info-value">@Model.City</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Author</span>
+                        <span class="info-value">@Model.AuthorName</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Published</span>
+                        <span class="info-value">@Model.CreatedOn.ToString("dd MMM yyyy")</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Topics</span>
+                        <span class="info-value">@string.Join(", ", Model.Topics)</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>

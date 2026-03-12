@@ -1,0 +1,55 @@
+﻿.post-form-page {
+    display: flex;
+    flex-direction: column;
+}
+
+.textarea {
+    resize: vertical;
+    min-height: 180px;
+    font-family: inherit;
+}
+
+.topics-selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.topic-check {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+    .topic-check input {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .topic-check span {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 14px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        background: #fbfcfe;
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 900;
+        cursor: pointer;
+        transition: .18s ease;
+    }
+
+    .topic-check input:checked + span {
+        background: #e6f3fb;
+        color: var(--brand-dark);
+        border-color: rgba(0,127,199,.35);
+        box-shadow: 0 0 0 4px rgba(0,127,199,.08);
+    }
+
+    .topic-check span:hover {
+        border-color: rgba(0,127,199,.35);
+        color: var(--brand-dark);
+    }

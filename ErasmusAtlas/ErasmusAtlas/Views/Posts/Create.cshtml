@@ -1,0 +1,94 @@
+﻿@model ErasmusAtlas.ViewModels.PostViewModels.CreatePostViewModel
+@using ErasmusAtlas.ViewModels.PostViewModels
+
+@{
+    Layout = "_LayoutDashboard";
+    ViewData["Title"] = "Create Post";
+
+    var cities = ViewBag.Cities as IEnumerable<CityLookupViewModel> ?? Enumerable.Empty<CityLookupViewModel>();
+    var topics = ViewBag.Topics as IEnumerable<TopicLookupViewModel> ?? Enumerable.Empty<TopicLookupViewModel>();
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/posts-form.css" asp-append-version="true" />
+}
+
+<div class="content-inner post-form-page">
+    <div class="card">
+        <div class="card-header">
+            <h2 class="h1">Create a new post</h2>
+            <div class="muted">Share an Erasmus experience, recommendation, warning, or tip.</div>
+        </div>
+
+        <div class="card-body">
+            <form asp-controller="Posts" asp-action="Create" method="post" class="form">
+                @Html.AntiForgeryToken()
+
+                <div asp-validation-summary="ModelOnly" class="validation"></div>
+
+                <div class="field">
+                    <label asp-for="Title"></label>
+                    <input asp-for="Title" class="input" placeholder="Enter a clear post title" />
+                    <span asp-validation-for="Title" class="validation"></span>
+                </div>
+
+                <div class="field">
+                    <label asp-for="Body"></label>
+                    <textarea asp-for="Body" class="input textarea" rows="8" placeholder="Write your experience, advice, or information..."></textarea>
+                    <span asp-validation-for="Body" class="validation"></span>
+                </div>
+
+                <div class="field">
+                    <label asp-for="CityId">City</label>
+                    <select asp-for="CityId" class="input">
+                        <option value="">Select a city</option>
+                        @foreach (var city in cities)
+                        {
+                            <option value="@city.Id">@city.Name</option>
+                        }
+                    </select>
+                    <span asp-validation-for="CityId" class="validation"></span>
+                </div>
+
+                <div class="field">
+                    <label>Topics</label>
+                    <div class="topics-selector">
+                        @foreach (var topic in topics)
+                        {
+                            var isChecked = Model.TopicIds.Contains(topic.Id);
+
+                            <label class="topic-check">
+                                <input type="checkbox" name="TopicIds" value="@topic.Id" @(isChecked ? "checked" : null) />
+                                <span>@topic.Name</span>
+                            </label>
+                        }
+                    </div>
+                    <span asp-validation-for="TopicIds" class="validation"></span>
+                </div>
+
+                <div class="row">
+                    <div class="field">
+                        <label asp-for="Latitude"></label>
+                        <input asp-for="Latitude" class="input" placeholder="e.g. 42.6977" />
+                        <span asp-validation-for="Latitude" class="validation"></span>
+                    </div>
+
+                    <div class="field">
+                        <label asp-for="Longitude"></label>
+                        <input asp-for="Longitude" class="input" placeholder="e.g. 23.3219" />
+                        <span asp-validation-for="Longitude" class="validation"></span>
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <a asp-controller="Posts" asp-action="Index" class="btn">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Create Post</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

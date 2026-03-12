@@ -29,7 +29,7 @@ public class PostsController(
 
         try
         {
-            var post = await postService.GetDeleteModelAsync(id, userId);
+            var post = await postService.GetByIdAsync(id, userId);
 
             return View(post);
         }
@@ -47,7 +47,9 @@ public class PostsController(
         ViewBag.Cities = await postService.GetCitiesAsync();
         ViewBag.Topics = await postService.GetTopicsAsync();
 
-        return View(new CreatePostViewModel());
+        var model = new CreatePostViewModel();
+
+        return View(model);
     }
 
     [HttpPost]

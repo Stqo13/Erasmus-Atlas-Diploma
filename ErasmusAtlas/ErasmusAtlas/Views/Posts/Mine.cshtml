@@ -1,0 +1,71 @@
+﻿@model IEnumerable<ErasmusAtlas.ViewModels.PostViewModels.PostInfoViewModel>
+
+@{
+    Layout = "_LayoutDashboard";
+    ViewData["Title"] = "My Posts";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/posts-index.css" asp-append-version="true" />
+}
+
+<div class="content-inner posts-page">
+    <div class="posts-header card">
+        <div class="card-body posts-header-body">
+            <div>
+                <h2 class="h1">My posts</h2>
+                <div class="muted">Manage the content you have shared on ErasmusAtlas.</div>
+            </div>
+
+            <div class="posts-header-actions">
+                <a asp-controller="Posts" asp-action="Index" class="btn">All Posts</a>
+                <a asp-controller="Posts" asp-action="Create" class="btn btn-primary">Create Post</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="posts-grid">
+        @if (Model == null || !Model.Any())
+        {
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="empty-title">You have no posts yet</h3>
+                    <div class="muted">Create your first Erasmus post to start building your profile activity.</div>
+                </div>
+            </div>
+        }
+        else
+        {
+            @foreach (var post in Model)
+            {
+                <article class="card post-card">
+                    <div class="card-body">
+                        <div class="post-meta-top">
+                            <span class="post-city">@post.City</span>
+                            <span class="post-date">@post.CreatedOn.ToString("dd MMM yyyy")</span>
+                        </div>
+
+                        <h3 class="post-title">
+                            <a asp-controller="Posts" asp-action="Details" asp-route-id="@post.Id">
+                                @post.Title
+                            </a>
+                        </h3>
+
+                        <div class="post-topics">
+                            @foreach (var topic in post.Topics)
+                            {
+                                <span class="topic-pill">@topic</span>
+                            }
+                        </div>
+
+                        <div class="post-actions">
+                            <a asp-controller="Posts" asp-action="Details" asp-route-id="@post.Id" class="btn">Details</a>
+                            <a asp-controller="Posts" asp-action="Edit" asp-route-id="@post.Id" class="btn">Edit</a>
+                            <a asp-controller="Posts" asp-action="Delete" asp-route-id="@post.Id" class="btn btn-primary">Delete</a>
+                        </div>
+                    </div>
+                </article>
+            }
+        }
+    </div>
+</div>

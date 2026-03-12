@@ -1,0 +1,43 @@
+﻿.delete-page {
+    display: flex;
+    justify-content: center;
+}
+
+.delete-card {
+    width: 100%;
+    max-width: 760px;
+}
+
+.delete-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 22px;
+}
+
+.delete-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+}
+
+    .delete-row:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+
+.delete-label {
+    font-size: 12px;
+    font-weight: 900;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
+
+.delete-value {
+    font-size: 15px;
+    font-weight: 850;
+    color: var(--text);
+}

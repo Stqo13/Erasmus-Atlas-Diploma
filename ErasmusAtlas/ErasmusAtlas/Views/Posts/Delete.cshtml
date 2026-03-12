@@ -1,0 +1,48 @@
+﻿@model ErasmusAtlas.ViewModels.PostViewModels.DeletePostViewModel
+
+@{
+    Layout = "_LayoutDashboard";
+    ViewData["Title"] = "Delete Post";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/posts-delete.css" asp-append-version="true" />
+}
+
+<div class="content-inner delete-page">
+    <div class="card delete-card">
+        <div class="card-header">
+            <h2 class="h1">Delete post</h2>
+            <div class="muted">This action cannot be undone.</div>
+        </div>
+
+        <div class="card-body">
+            <div class="delete-summary">
+                <div class="delete-row">
+                    <span class="delete-label">Title</span>
+                    <span class="delete-value">@Model.Title</span>
+                </div>
+
+                <div class="delete-row">
+                    <span class="delete-label">City</span>
+                    <span class="delete-value">@Model.City</span>
+                </div>
+
+                <div class="delete-row">
+                    <span class="delete-label">Topics</span>
+                    <span class="delete-value">@string.Join(", ", Model.Topics)</span>
+                </div>
+            </div>
+
+            <form asp-controller="Posts" asp-action="Delete" asp-route-id="@Model.Id" method="post">
+                @Html.AntiForgeryToken()
+                <input asp-for="Id" type="hidden" />
+
+                <div class="actions">
+                    <a asp-controller="Posts" asp-action="Details" asp-route-id="@Model.Id" class="btn">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Delete Post</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
