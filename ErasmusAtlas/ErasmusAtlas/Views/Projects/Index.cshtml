@@ -22,17 +22,23 @@
             <form asp-controller="Projects" asp-action="Index" method="get" class="form project-filters">
                 <div class="row">
                     <div class="field">
-                        <label asp-for="Filter.SearchTerm">Search</label>
-                        <input asp-for="Filter.SearchTerm" class="input" placeholder="Search by title or description" />
+                        <label for="SearchTerm">Search</label>
+                        <input id="SearchTerm"
+                               name="SearchTerm"
+                               class="input"
+                               placeholder="Search by title or description"
+                               value="@Model.Filter.SearchTerm" />
                     </div>
 
                     <div class="field">
-                        <label asp-for="Filter.CityId">City</label>
-                        <select asp-for="Filter.CityId" class="input">
+                        <label for="CityId">City</label>
+                        <select id="CityId" name="CityId" class="input">
                             <option value="">All cities</option>
                             @foreach (var city in Model.Cities)
                             {
-                                <option value="@city.Id">@city.Name</option>
+                                <option value="@city.Id" selected="@(Model.Filter.CityId == city.Id)">
+                                    @city.Name
+                                </option>
                             }
                         </select>
                     </div>
@@ -40,12 +46,14 @@
 
                 <div class="row">
                     <div class="field">
-                        <label asp-for="Filter.ProjectTypeId">Project Type</label>
-                        <select asp-for="Filter.ProjectTypeId" class="input">
+                        <label for="ProjectTypeId">Project Type</label>
+                        <select id="ProjectTypeId" name="ProjectTypeId" class="input">
                             <option value="">All project types</option>
                             @foreach (var type in Model.ProjectTypes)
                             {
-                                <option value="@type.Id">@type.Name</option>
+                                <option value="@type.Id" selected="@(Model.Filter.ProjectTypeId == type.Id)">
+                                    @type.Name
+                                </option>
                             }
                         </select>
                     </div>
