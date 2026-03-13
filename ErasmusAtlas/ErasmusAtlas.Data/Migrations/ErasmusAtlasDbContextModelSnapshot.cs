@@ -49,7 +49,7 @@ namespace ErasmusAtlas.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Cities");
+                    b.ToTable("Cities", (string)null);
 
                     b.HasData(
                         new
@@ -398,7 +398,7 @@ namespace ErasmusAtlas.Infrastructure.Migrations
 
                     b.HasIndex("CityId");
 
-                    b.ToTable("Institutions");
+                    b.ToTable("Institutions", (string)null);
                 });
 
             modelBuilder.Entity("ErasmusAtlas.Infrastructure.Models.Post", b =>
@@ -441,7 +441,7 @@ namespace ErasmusAtlas.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Posts");
+                    b.ToTable("Posts", (string)null);
                 });
 
             modelBuilder.Entity("ErasmusAtlas.Infrastructure.Models.PostTopic", b =>
@@ -456,7 +456,7 @@ namespace ErasmusAtlas.Infrastructure.Migrations
 
                     b.HasIndex("TopicId");
 
-                    b.ToTable("PostTopics");
+                    b.ToTable("PostTopics", (string)null);
                 });
 
             modelBuilder.Entity("ErasmusAtlas.Infrastructure.Models.Project", b =>
@@ -498,7 +498,7 @@ namespace ErasmusAtlas.Infrastructure.Migrations
 
                     b.HasIndex("ProjectTypeId");
 
-                    b.ToTable("Projects");
+                    b.ToTable("Projects", (string)null);
                 });
 
             modelBuilder.Entity("ErasmusAtlas.Infrastructure.Models.ProjectApplication", b =>
@@ -532,7 +532,7 @@ namespace ErasmusAtlas.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ProjectApplications");
+                    b.ToTable("ProjectApplications", (string)null);
                 });
 
             modelBuilder.Entity("ErasmusAtlas.Infrastructure.Models.ProjectTag", b =>
@@ -547,7 +547,7 @@ namespace ErasmusAtlas.Infrastructure.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("ProjectTags");
+                    b.ToTable("ProjectTags", (string)null);
                 });
 
             modelBuilder.Entity("ErasmusAtlas.Infrastructure.Models.ProjectType", b =>
@@ -568,7 +568,7 @@ namespace ErasmusAtlas.Infrastructure.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("ProjectTypes");
+                    b.ToTable("ProjectTypes", (string)null);
 
                     b.HasData(
                         new
@@ -621,7 +621,7 @@ namespace ErasmusAtlas.Infrastructure.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Tags");
+                    b.ToTable("Tags", (string)null);
 
                     b.HasData(
                         new
@@ -681,7 +681,7 @@ namespace ErasmusAtlas.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Topics");
+                    b.ToTable("Topics", (string)null);
 
                     b.HasData(
                         new

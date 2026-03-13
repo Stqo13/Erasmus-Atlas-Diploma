@@ -12,4 +12,7 @@ public class Tag
     [Required]
     [MaxLength(TagNameMaxLength)]
     public string Name { get; set; } = null!;
+
+    public ICollection<ProjectTag> ProjectTags { get; set; } 
+        = new List<ProjectTag>();
 }

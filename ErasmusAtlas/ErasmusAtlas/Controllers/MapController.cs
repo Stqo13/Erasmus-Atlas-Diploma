@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 using ErasmusAtlas.Core.Interfaces;
 using ErasmusAtlas.ViewModels.MapViewModels;
@@ -10,6 +11,7 @@ public class MapController(
     : Controller
 {
     [HttpGet]
+    [Authorize]
     public IActionResult Index()
     {
         return View();

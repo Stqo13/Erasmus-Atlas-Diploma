@@ -1,4 +1,4 @@
-﻿namespace ErasmusAtlas.ViewModels.PostViewModels;
+﻿namespace ErasmusAtlas.ViewModels.SharedViewModels;
 
 public class CityLookupViewModel
 {

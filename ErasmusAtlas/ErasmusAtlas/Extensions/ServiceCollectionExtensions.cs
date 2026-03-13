@@ -12,8 +12,11 @@ public static class ServiceCollectionExtensions
             this IServiceCollection services)
     {
         services.AddScoped<IRepository<Post, Guid>, Repository<Post, Guid>>();
+        services.AddScoped<IRepository<Project, Guid>, Repository<Project, Guid>>();
         services.AddScoped<IRepository<City, int>, Repository<City, int>>();
         services.AddScoped<IRepository<Topic, int>, Repository<Topic, int>>();
+        services.AddScoped<IRepository<ProjectType, int>, Repository<ProjectType, int>>();
+        services.AddScoped<IRepository<Tag, int>, Repository<Tag, int>>();
 
         return services;
     }
@@ -23,6 +26,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddScoped<IMapService, MapService>();
         services.AddScoped<IPostService, PostService>();
+        services.AddScoped<IProjectService, ProjectService>();
 
         return services;
     }

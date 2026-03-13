@@ -5,6 +5,7 @@ using ErasmusAtlas.Infrastructure.Models;
 using ErasmusAtlas.ViewModels.PostViewModels;
 using ErasmusAtlas.Infrastructure.Repository.Interfaces;
 using NetTopologySuite.Geometries;
+using ErasmusAtlas.ViewModels.SharedViewModels;
 
 namespace ErasmusAtlas.Core.Implementations;
 

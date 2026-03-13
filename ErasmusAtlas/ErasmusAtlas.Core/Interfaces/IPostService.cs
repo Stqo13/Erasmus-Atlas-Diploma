@@ -1,4 +1,5 @@
 ﻿using ErasmusAtlas.ViewModels.PostViewModels;
+using ErasmusAtlas.ViewModels.SharedViewModels;
 
 namespace ErasmusAtlas.Core.Interfaces;
 
