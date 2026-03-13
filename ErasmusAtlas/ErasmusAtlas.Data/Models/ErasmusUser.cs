@@ -1,13 +1,15 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
+using static ErasmusAtlas.Common.ApplicationConstraints.UserConstraints;
+
 namespace ErasmusAtlas.Infrastructure.Models;
 
 public class ErasmusUser : IdentityUser
 {
-    [MaxLength(80)]
+    [MaxLength(UserFirstNameMaxLength)]
     public string? FirstName { get; set; }
 
-    [MaxLength(80)]
+    [MaxLength(UserLastNameMaxLength)]
     public string? LastName { get; set; }
 }

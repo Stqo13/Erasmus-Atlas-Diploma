@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
+using static ErasmusAtlas.Common.ApplicationConstraints.InstitutionConstraints;
+
 namespace ErasmusAtlas.Infrastructure.Models;
 
 public class Institution
@@ -9,10 +11,10 @@ public class Institution
     public int Id { get; set; }
 
     [Required]
-    [MaxLength(180)]
+    [MaxLength(InstitutionNameMaxLength)]
     public string Name { get; set; } = null!;
 
-    [MaxLength(400)]
+    [MaxLength(InstitutionWebsiteUrlMaxLength)]
     public string? WebsiteUrl { get; set; }
 
     public int? CityId { get; set; }

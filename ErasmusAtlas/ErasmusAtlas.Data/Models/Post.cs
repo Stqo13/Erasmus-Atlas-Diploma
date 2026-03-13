@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
+using static ErasmusAtlas.Common.ApplicationConstraints.PostConstraints;
+
 using NetTopologySuite.Geometries;
 
 namespace ErasmusAtlas.Infrastructure.Models;
@@ -11,15 +13,15 @@ public class Post
     public Guid Id { get; set; } = Guid.NewGuid();
 
     [Required]
-    [MaxLength(160)]
+    [MaxLength(PostTitleMaxLength)]
     public string Title { get; set; } = null!;
 
     [Required]
-    [MaxLength(8000)]
+    [MaxLength(PostBodyMaxLength)]
     public string Body { get; set; } = null!;
 
     [Required]
-    [MaxLength(32)]
+    [MaxLength(PostStatusMaxLength)]
     public string Status { get; set; } = "Published";
 
     [Required]

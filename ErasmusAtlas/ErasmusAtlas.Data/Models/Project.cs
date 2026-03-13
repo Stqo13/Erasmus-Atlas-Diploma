@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
+using static ErasmusAtlas.Common.ApplicationConstraints.ProjectConstraints;
+
 using NetTopologySuite.Geometries;
 
 namespace ErasmusAtlas.Infrastructure.Models;
@@ -11,11 +13,11 @@ public class Project
     public Guid Id { get; set; } = Guid.NewGuid();
 
     [Required]
-    [MaxLength(200)]
+    [MaxLength(ProjectTitleMaxLength)]
     public string Title { get; set; } = null!;
 
     [Required]
-    [MaxLength(12000)]
+    [MaxLength(ProjectDescriptionMaxLength)]
     public string Description { get; set; } = null!;
 
     [Required]

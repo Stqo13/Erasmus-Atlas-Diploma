@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
+using static ErasmusAtlas.Common.ApplicationConstraints.CityConstraints;
+
 namespace ErasmusAtlas.Infrastructure.Models;
 
 public class City
@@ -8,11 +10,11 @@ public class City
     public int Id { get; set; }
 
     [Required]
-    [MaxLength(120)]
+    [MaxLength(CityNameMaxLength)]
     public string Name { get; set; } = null!;
 
     [Required]
-    [StringLength(2, MinimumLength = 2)]
+    [StringLength(CountryIsoLength, MinimumLength = CountryIsoLength)]
     public string CountryIso2 { get; set; } = null!;
 
     public double Latitude { get; set; }
