@@ -1,0 +1,158 @@
+﻿.projects-page {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.projects-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.project-filters {
+    margin-top: 18px;
+}
+
+.tags-selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.tag-check {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+    .tag-check input {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .tag-check span {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 14px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        background: #fbfcfe;
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 900;
+        cursor: pointer;
+        transition: .18s ease;
+    }
+
+    .tag-check input:checked + span {
+        background: #e6f3fb;
+        color: var(--brand-dark);
+        border-color: rgba(0,127,199,.35);
+        box-shadow: 0 0 0 4px rgba(0,127,199,.08);
+    }
+
+    .tag-check span:hover {
+        border-color: rgba(0,127,199,.35);
+        color: var(--brand-dark);
+    }
+
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.project-card {
+    height: 100%;
+}
+
+.project-meta-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.project-city,
+.project-date {
+    font-size: 13px;
+    font-weight: 900;
+    color: var(--muted);
+}
+
+.project-title {
+    margin: 0 0 10px 0;
+    font-size: 20px;
+    font-weight: 950;
+    color: var(--brand-dark);
+    line-height: 1.25;
+}
+
+    .project-title a:hover {
+        color: var(--brand);
+    }
+
+.project-type {
+    color: var(--brand-dark);
+    font-weight: 900;
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.project-institution {
+    color: var(--muted);
+    font-weight: 800;
+    font-size: 14px;
+    margin-bottom: 14px;
+}
+
+.project-description {
+    margin: 0 0 16px 0;
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 14px;
+}
+
+.project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 18px;
+}
+
+.tag-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: #eef6fc;
+    color: var(--brand-dark);
+    border: 1px solid rgba(0,127,199,.18);
+    font-size: 12px;
+    font-weight: 900;
+}
+
+.project-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.empty-title {
+    margin: 0 0 8px 0;
+    color: var(--brand-dark);
+    font-size: 20px;
+    font-weight: 950;
+}
+
+@media (max-width: 860px) {
+    .projects-grid {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,0 +1,128 @@
+﻿@model ErasmusAtlas.ViewModels.ProjectViewModels.ProjectsIndexPageViewModel
+
+@{
+    Layout = "_LayoutDashboard";
+    ViewData["Title"] = "Projects";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/projects-index.css" asp-append-version="true" />
+}
+
+<div class="content-inner projects-page">
+    <div class="card">
+        <div class="card-body">
+            <div class="projects-header">
+                <div>
+                    <h2 class="h1">Explore projects</h2>
+                    <div class="muted">Browse Erasmus opportunities by city, type, and tags.</div>
+                </div>
+            </div>
+
+            <form asp-controller="Projects" asp-action="Index" method="get" class="form project-filters">
+                <div class="row">
+                    <div class="field">
+                        <label asp-for="Filter.SearchTerm">Search</label>
+                        <input asp-for="Filter.SearchTerm" class="input" placeholder="Search by title or description" />
+                    </div>
+
+                    <div class="field">
+                        <label asp-for="Filter.CityId">City</label>
+                        <select asp-for="Filter.CityId" class="input">
+                            <option value="">All cities</option>
+                            @foreach (var city in Model.Cities)
+                            {
+                                <option value="@city.Id">@city.Name</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="field">
+                        <label asp-for="Filter.ProjectTypeId">Project Type</label>
+                        <select asp-for="Filter.ProjectTypeId" class="input">
+                            <option value="">All project types</option>
+                            @foreach (var type in Model.ProjectTypes)
+                            {
+                                <option value="@type.Id">@type.Name</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label>Tags</label>
+                        <div class="tags-selector">
+                            @foreach (var tag in Model.Tags)
+                            {
+                                var isChecked = Model.Filter.TagIds.Contains(tag.Id);
+
+                                <label class="tag-check">
+                                    <input type="checkbox" name="TagIds" value="@tag.Id" @(isChecked ? "checked" : null) />
+                                    <span>@tag.Name</span>
+                                </label>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <a asp-controller="Projects" asp-action="Index" class="btn">Clear</a>
+                    <button type="submit" class="btn btn-primary">Apply Filters</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="projects-grid">
+        @if (Model.Projects == null || !Model.Projects.Any())
+        {
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="empty-title">No projects found</h3>
+                    <div class="muted">Try changing the filters to see more opportunities.</div>
+                </div>
+            </div>
+        }
+        else
+        {
+            @foreach (var project in Model.Projects)
+            {
+                <article class="card project-card">
+                    <div class="card-body">
+                        <div class="project-meta-top">
+                            <span class="project-city">@project.City</span>
+                            <span class="project-date">@project.CreatedOn.ToString("dd MMM yyyy")</span>
+                        </div>
+
+                        <h3 class="project-title">
+                            <a asp-controller="Projects" asp-action="Details" asp-route-id="@project.Id">
+                                @project.Title
+                            </a>
+                        </h3>
+
+                        <div class="project-type">@project.ProjectType</div>
+                        <div class="project-institution">@project.Institution</div>
+
+                        <p class="project-description">
+                            @project.DescriptionPreview
+                        </p>
+
+                        <div class="project-tags">
+                            @foreach (var tag in project.Tags)
+                            {
+                                <span class="tag-pill">@tag</span>
+                            }
+                        </div>
+
+                        <div class="project-actions">
+                            <a asp-controller="Projects" asp-action="Details" asp-route-id="@project.Id" class="btn btn-primary">
+                                View Details
+                            </a>
+                        </div>
+                    </div>
+                </article>
+            }
+        }
+    </div>
+</div>

@@ -1,0 +1,86 @@
+﻿@model ErasmusAtlas.ViewModels.ProjectViewModels.ProjectDetailsViewModel
+
+@{
+    Layout = "_LayoutDashboard";
+    ViewData["Title"] = "Project Details";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/projects-details.css" asp-append-version="true" />
+}
+
+<div class="content-inner project-details-page">
+    <div class="project-details-grid">
+        <section class="card">
+            <div class="card-body">
+                <div class="details-meta-top">
+                    <span class="details-city">@Model.City</span>
+                    <span class="details-date">@Model.CreatedOn.ToString("dd MMM yyyy")</span>
+                </div>
+
+                <h2 class="h1 details-title">@Model.Title</h2>
+
+                <div class="project-type-badge">@Model.ProjectType</div>
+
+                <div class="project-tags">
+                    @foreach (var tag in Model.Tags)
+                    {
+                        <span class="tag-pill">@tag</span>
+                    }
+                </div>
+
+                <div class="details-institution muted">
+                    Institution: <strong>@Model.Institution</strong>
+                </div>
+
+                <div class="details-body">
+                    @Model.Description
+                </div>
+
+                @if (Model.Latitude.HasValue && Model.Longitude.HasValue)
+                {
+                    <div class="details-location muted">
+                        Coordinates: @Model.Latitude.Value.ToString("F5"), @Model.Longitude.Value.ToString("F5")
+                    </div>
+                }
+
+                <div class="actions">
+                    <a asp-controller="Projects" asp-action="Index" class="btn">Back to Projects</a>
+                </div>
+            </div>
+        </section>
+
+        <aside class="card">
+            <div class="card-body">
+                <h3 class="side-title">Project Info</h3>
+
+                <div class="info-list">
+                    <div class="info-row">
+                        <span class="info-label">Type</span>
+                        <span class="info-value">@Model.ProjectType</span>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-label">City</span>
+                        <span class="info-value">@Model.City</span>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-label">Institution</span>
+                        <span class="info-value">@Model.Institution</span>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-label">Created On</span>
+                        <span class="info-value">@Model.CreatedOn.ToString("dd MMM yyyy")</span>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-label">Tags</span>
+                        <span class="info-value">@string.Join(", ", Model.Tags)</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>
