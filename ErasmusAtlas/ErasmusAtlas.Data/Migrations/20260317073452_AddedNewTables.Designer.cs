@@ -4,6 +4,7 @@ using ErasmusAtlas.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 
@@ -12,9 +13,11 @@ using NetTopologySuite.Geometries;
 namespace ErasmusAtlas.Infrastructure.Migrations
 {
     [DbContext(typeof(ErasmusAtlasDbContext))]
-    partial class ErasmusAtlasDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260317073452_AddedNewTables")]
+    partial class AddedNewTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

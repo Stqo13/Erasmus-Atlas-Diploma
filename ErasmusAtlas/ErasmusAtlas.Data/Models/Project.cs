@@ -42,6 +42,9 @@ public class Project
     [ForeignKey(nameof(CityId))]
     public City? City { get; set; }
 
+    public ICollection<SavedProject> SavedByUsers { get; set; }
+        = new List<SavedProject>();
+
     public ICollection<ProjectTag> ProjectTags { get; set; }
         = new List<ProjectTag>();
 }

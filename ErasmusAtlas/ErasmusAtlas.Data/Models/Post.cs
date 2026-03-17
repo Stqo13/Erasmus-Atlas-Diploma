@@ -34,6 +34,9 @@ public class Post
     [ForeignKey(nameof(CityId))]
     public City? City { get; set; }
 
+    public ICollection<SavedPost> SavedByUsers { get; set; }
+        = new List<SavedPost>();
+
     [Required]
     public string UserId { get; set; } = null!;
 
