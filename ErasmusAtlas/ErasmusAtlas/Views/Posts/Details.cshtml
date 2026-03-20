@@ -45,6 +45,26 @@
                 <div class="actions">
                     <a asp-controller="Posts" asp-action="Index" class="btn">Back to Posts</a>
 
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        @if (Model.IsSaved)
+                        {
+                            <form asp-controller="Saved" asp-action="UnsavePost" method="post" class="inline-form">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="postId" value="@Model.Id" />
+                                <button type="submit" class="btn">Unsave</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <form asp-controller="Saved" asp-action="SavePost" method="post" class="inline-form">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="postId" value="@Model.Id" />
+                                <button type="submit" class="btn btn-primary">Save Post</button>
+                            </form>
+                        }
+                    }
+
                     @if (Model.CanEdit)
                     {
                         <a asp-controller="Posts" asp-action="Edit" asp-route-id="@Model.Id" class="btn">Edit</a>

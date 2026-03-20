@@ -1,0 +1,70 @@
+﻿@model IEnumerable<ErasmusAtlas.ViewModels.PostViewModels.PostInfoViewModel>
+
+@{
+    Layout = "_LayoutDashboard";
+    ViewData["Title"] = "Saved Posts";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/saved-pages.css" asp-append-version="true" />
+}
+
+<div class="content-inner saved-page">
+    <div class="saved-header card">
+        <div class="card-body saved-header-body">
+            <div>
+                <h2 class="h1">Saved posts</h2>
+                <div class="muted">All posts you have bookmarked for later.</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="saved-grid">
+        @if (Model == null || !Model.Any())
+        {
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="empty-title">No saved posts yet</h3>
+                    <div class="muted">Save posts from the details page to see them here.</div>
+                </div>
+            </div>
+        }
+        else
+        {
+            @foreach (var post in Model)
+            {
+                <article class="card saved-card">
+                    <div class="card-body">
+                        <div class="saved-meta-top">
+                            <span class="saved-city">@post.City</span>
+                            <span class="saved-date">@post.CreatedOn.ToString("dd MMM yyyy")</span>
+                        </div>
+
+                        <h3 class="saved-title">
+                            <a asp-controller="Posts" asp-action="Details" asp-route-id="@post.Id">
+                                @post.Title
+                            </a>
+                        </h3>
+
+                        <div class="saved-tags">
+                            @foreach (var topic in post.Topics)
+                            {
+                                <span class="saved-pill">@topic</span>
+                            }
+                        </div>
+
+                        <div class="saved-actions">
+                            <a asp-controller="Posts" asp-action="Details" asp-route-id="@post.Id" class="btn">View</a>
+
+                            <form asp-controller="Saved" asp-action="UnsavePost" method="post" class="inline-form">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="postId" value="@post.Id" />
+                                <button type="submit" class="btn btn-primary">Remove</button>
+                            </form>
+                        </div>
+                    </div>
+                </article>
+            }
+        }
+    </div>
+</div>

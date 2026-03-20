@@ -12,7 +12,8 @@ namespace ErasmusAtlas.Core.Implementations;
 public class PostService(
     IRepository<Post, Guid> postsRepository,
     IRepository<City, int> citiesRepository,
-    IRepository<Topic, int> topicsRepository)
+    IRepository<Topic, int> topicsRepository,
+    IRepository<SavedPost, object> savedPostsRepository)
     : IPostService
 {
     public async Task CreateAsync(CreatePostViewModel model, string userId)
@@ -157,6 +158,9 @@ public class PostService(
             throw new NullReferenceException("Unable to find this post!");
         }
 
+        post.IsSaved = currentUserId != null &&
+                       await savedPostsRepository.GetAllAttached()
+                                                 .AnyAsync(sp => sp.UserId == currentUserId && sp.PostId == id);
         return post;
     }
 

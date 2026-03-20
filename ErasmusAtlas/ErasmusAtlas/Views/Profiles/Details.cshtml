@@ -1,0 +1,144 @@
+﻿@model ErasmusAtlas.ViewModels.AccountViewModels.UserProfileViewModel
+
+@{
+    Layout = "_LayoutDashboard";
+    ViewData["Title"] = Model.IsOwner ? "My Profile" : "Profile";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/profile-pages.css" asp-append-version="true" />
+}
+
+<div class="content-inner profile-page">
+    <div class="profile-grid">
+        <section class="card">
+            <div class="card-body">
+                <div class="profile-header">
+                    <div class="profile-avatar"></div>
+
+                    <div class="profile-main">
+                        <h2 class="h1 profile-name">@Model.DisplayName</h2>
+                        <div class="profile-username muted">@Model.UserName</div>
+
+                        @if (!string.IsNullOrWhiteSpace(Model.Bio))
+                        {
+                            <div class="profile-bio">
+                                @Model.Bio
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                @if (Model.IsOwner)
+                {
+                    <div class="actions profile-actions">
+                        <a asp-controller="Profiles" asp-action="Edit" class="btn btn-primary">Edit Profile</a>
+                        <a asp-controller="Saved" asp-action="Posts" class="btn">Saved Posts</a>
+                        <a asp-controller="Saved" asp-action="Projects" class="btn">Saved Projects</a>
+                    </div>
+                }
+            </div>
+        </section>
+
+        <aside class="card">
+            <div class="card-body">
+                <h3 class="side-title">Activity Summary</h3>
+
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <span class="stat-value">@Model.PostsCount</span>
+                        <span class="stat-label">Posts</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-value">@Model.SavedPostsCount</span>
+                        <span class="stat-label">Saved Posts</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-value">@Model.SavedProjectsCount</span>
+                        <span class="stat-label">Saved Projects</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <div class="profile-sections">
+        <section class="card">
+            <div class="card-body">
+                <div class="section-header">
+                    <h3 class="section-title">Recent Posts</h3>
+                </div>
+
+                @if (Model.RecentPosts == null || !Model.RecentPosts.Any())
+                {
+                    <div class="muted">No posts yet.</div>
+                }
+                else
+                {
+                    <div class="mini-list">
+                        @foreach (var post in Model.RecentPosts)
+                        {
+                            <article class="mini-card">
+                                <div class="mini-top">
+                                    <span class="mini-place">@post.City</span>
+                                    <span class="mini-date">@post.CreatedOn.ToString("dd MMM yyyy")</span>
+                                </div>
+
+                                <a asp-controller="Posts" asp-action="Details" asp-route-id="@post.Id" class="mini-title">
+                                    @post.Title
+                                </a>
+
+                                <div class="mini-tags">
+                                    @foreach (var topic in post.Topics)
+                                    {
+                                        <span class="mini-pill">@topic</span>
+                                    }
+                                </div>
+                            </article>
+                        }
+                    </div>
+                }
+            </div>
+        </section>
+
+        <section class="card">
+            <div class="card-body">
+                <div class="section-header">
+                    <h3 class="section-title">Saved Projects Preview</h3>
+                </div>
+
+                @if (Model.SavedProjectsPreview == null || !Model.SavedProjectsPreview.Any())
+                {
+                    <div class="muted">No saved projects yet.</div>
+                }
+                else
+                {
+                    <div class="mini-list">
+                        @foreach (var project in Model.SavedProjectsPreview)
+                        {
+                            <article class="mini-card">
+                                <div class="mini-top">
+                                    <span class="mini-place">@project.City</span>
+                                    <span class="mini-date">@project.CreatedOn.ToString("dd MMM yyyy")</span>
+                                </div>
+
+                                <a asp-controller="Projects" asp-action="Details" asp-route-id="@project.Id" class="mini-title">
+                                    @project.Title
+                                </a>
+
+                                <div class="mini-subtitle">@project.ProjectType • @project.Institution</div>
+
+                                <div class="mini-tags">
+                                    @foreach (var tag in project.Tags)
+                                    {
+                                        <span class="mini-pill">@tag</span>
+                                    }
+                                </div>
+                            </article>
+                        }
+                    </div>
+                }
+            </div>
+        </section>
+    </div>
+</div>

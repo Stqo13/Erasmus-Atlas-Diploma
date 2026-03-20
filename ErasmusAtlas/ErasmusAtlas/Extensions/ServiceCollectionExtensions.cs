@@ -17,6 +17,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IRepository<Topic, int>, Repository<Topic, int>>();
         services.AddScoped<IRepository<ProjectType, int>, Repository<ProjectType, int>>();
         services.AddScoped<IRepository<Tag, int>, Repository<Tag, int>>();
+        services.AddScoped<IRepository<SavedPost, object>, Repository<SavedPost, object>>();
+        services.AddScoped<IRepository<SavedProject, object>, Repository<SavedProject, object>>();
 
         return services;
     }
@@ -27,6 +29,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IMapService, MapService>();
         services.AddScoped<IPostService, PostService>();
         services.AddScoped<IProjectService, ProjectService>();
+        services.AddScoped<IProfileService, ProfileService>();
+        services.AddScoped<ISavedContentService, SavedContentService>();
 
         return services;
     }

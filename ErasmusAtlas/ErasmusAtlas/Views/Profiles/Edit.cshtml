@@ -1,0 +1,48 @@
+﻿@model ErasmusAtlas.ViewModels.AccountViewModels.EditProfileViewModel
+
+@{
+    Layout = "_LayoutDashboard";
+    ViewData["Title"] = "Edit Profile";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/profile-pages.css" asp-append-version="true" />
+}
+
+<div class="content-inner profile-edit-page">
+    <div class="card profile-edit-card">
+        <div class="card-header">
+            <h2 class="h1">Edit profile</h2>
+            <div class="muted">Update how your profile appears in ErasmusAtlas.</div>
+        </div>
+
+        <div class="card-body">
+            <form asp-controller="Profiles" asp-action="Edit" method="post" class="form">
+                @Html.AntiForgeryToken()
+
+                <div asp-validation-summary="ModelOnly" class="validation"></div>
+
+                <div class="field">
+                    <label asp-for="DisplayName"></label>
+                    <input asp-for="DisplayName" class="input" placeholder="Your public display name" />
+                    <span asp-validation-for="DisplayName" class="validation"></span>
+                </div>
+
+                <div class="field">
+                    <label asp-for="Bio"></label>
+                    <textarea asp-for="Bio" class="input textarea" rows="6" placeholder="Tell others a little about yourself..."></textarea>
+                    <span asp-validation-for="Bio" class="validation"></span>
+                </div>
+
+                <div class="actions">
+                    <a asp-controller="Profiles" asp-action="Me" class="btn">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Save Profile</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -7,7 +7,7 @@ public interface IProjectService
 {
     Task<IEnumerable<ProjectInfoViewModel>> GetAllFilteredAsync(ProjectFilterViewModel filter);
 
-    Task<ProjectDetailsViewModel?> GetByIdAsync(Guid id);
+    Task<ProjectDetailsViewModel?> GetByIdAsync(Guid id, string userId);
 
     Task<IEnumerable<CityLookupViewModel>> GetCitiesAsync();
 

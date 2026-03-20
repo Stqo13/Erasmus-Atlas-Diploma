@@ -7,7 +7,7 @@ using ErasmusAtlas.Infrastructure.Models;
 
 namespace ErasmusAtlas.Infrastructure;
 
-public class ErasmusAtlasDbContext : IdentityDbContext
+public class ErasmusAtlasDbContext : IdentityDbContext<ErasmusUser>
 {
 
     public ErasmusAtlasDbContext(DbContextOptions<ErasmusAtlasDbContext> options)

@@ -11,7 +11,8 @@ public class ProjectService(
     IRepository<Project, Guid> projectRepository,
     IRepository<City, int> cityRepository,
     IRepository<ProjectType, int> projectTypeRepository,
-    IRepository<Tag, int> tagRepository)
+    IRepository<Tag, int> tagRepository,
+    IRepository<SavedProject, object> savedProjectRepository)
     : IProjectService
 {
     public async Task<IEnumerable<ProjectInfoViewModel>> GetAllFilteredAsync(ProjectFilterViewModel filter)
@@ -72,7 +73,7 @@ public class ProjectService(
         return projects;
     }
 
-    public async Task<ProjectDetailsViewModel?> GetByIdAsync(Guid id)
+    public async Task<ProjectDetailsViewModel?> GetByIdAsync(Guid id, string userId)
     {
         var project = await projectRepository
             .GetAllAttached()
@@ -99,6 +100,10 @@ public class ProjectService(
         {
             throw new NullReferenceException("Unable to find project!");
         }
+
+        project.IsSaved = userId != null &&
+                          await savedProjectRepository.GetAllAttached()
+                                                      .AnyAsync(sp => sp.UserId == userId && sp.ProjectId == id);
 
         return project;
     }

@@ -1,0 +1,76 @@
+﻿@model IEnumerable<ErasmusAtlas.ViewModels.ProjectViewModels.ProjectInfoViewModel>
+
+@{
+    Layout = "_LayoutDashboard";
+    ViewData["Title"] = "Saved Projects";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/saved-pages.css" asp-append-version="true" />
+}
+
+<div class="content-inner saved-page">
+    <div class="saved-header card">
+        <div class="card-body saved-header-body">
+            <div>
+                <h2 class="h1">Saved projects</h2>
+                <div class="muted">Projects you want to revisit later.</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="saved-grid">
+        @if (Model == null || !Model.Any())
+        {
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="empty-title">No saved projects yet</h3>
+                    <div class="muted">Save projects from the details page to see them here.</div>
+                </div>
+            </div>
+        }
+        else
+        {
+            @foreach (var project in Model)
+            {
+                <article class="card saved-card">
+                    <div class="card-body">
+                        <div class="saved-meta-top">
+                            <span class="saved-city">@project.City</span>
+                            <span class="saved-date">@project.CreatedOn.ToString("dd MMM yyyy")</span>
+                        </div>
+
+                        <h3 class="saved-title">
+                            <a asp-controller="Projects" asp-action="Details" asp-route-id="@project.Id">
+                                @project.Title
+                            </a>
+                        </h3>
+
+                        <div class="saved-subtitle">@project.ProjectType • @project.Institution</div>
+
+                        <div class="saved-description">
+                            @project.DescriptionPreview
+                        </div>
+
+                        <div class="saved-tags">
+                            @foreach (var tag in project.Tags)
+                            {
+                                <span class="saved-pill">@tag</span>
+                            }
+                        </div>
+
+                        <div class="saved-actions">
+                            <a asp-controller="Projects" asp-action="Details" asp-route-id="@project.Id" class="btn">View</a>
+
+                            <form asp-controller="Saved" asp-action="UnsaveProject" method="post" class="inline-form">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="projectId" value="@project.Id" />
+                                <button type="submit" class="btn btn-primary">Remove</button>
+                            </form>
+                        </div>
+                    </div>
+                </article>
+            }
+        }
+    </div>
+</div>

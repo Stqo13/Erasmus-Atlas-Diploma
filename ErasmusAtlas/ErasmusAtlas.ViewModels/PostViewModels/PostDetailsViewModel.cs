@@ -23,5 +23,7 @@
         public double? Longitude { get; set; }
 
         public bool CanEdit { get; set; }
+
+        public bool IsSaved { get; set; }
     }
 }
