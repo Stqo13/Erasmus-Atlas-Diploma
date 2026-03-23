@@ -374,6 +374,85 @@ namespace ErasmusAtlas.Infrastructure.Migrations
                         });
                 });
 
+            modelBuilder.Entity("ErasmusAtlas.Infrastructure.Models.ErasmusUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Bio")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DisplayName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("FirstName")
+                        .HasMaxLength(80)
+                        .HasColumnType("nvarchar(80)");
+
+                    b.Property<string>("LastName")
+                        .HasMaxLength(80)
+                        .HasColumnType("nvarchar(80)");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.ToTable("AspNetUsers", (string)null);
+                });
+
             modelBuilder.Entity("ErasmusAtlas.Infrastructure.Models.Institution", b =>
                 {
                     b.Property<int>("Id")
@@ -611,12 +690,22 @@ namespace ErasmusAtlas.Infrastructure.Migrations
                     b.Property<Guid>("PostId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("ErasmusUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<Guid?>("PostId1")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("SavedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("UserId", "PostId");
 
+                    b.HasIndex("ErasmusUserId");
+
                     b.HasIndex("PostId");
+
+                    b.HasIndex("PostId1");
 
                     b.ToTable("SavedPosts");
                 });
@@ -629,12 +718,22 @@ namespace ErasmusAtlas.Infrastructure.Migrations
                     b.Property<Guid>("ProjectId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("ErasmusUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<Guid?>("ProjectId1")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("SavedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("UserId", "ProjectId");
 
+                    b.HasIndex("ErasmusUserId");
+
                     b.HasIndex("ProjectId");
+
+                    b.HasIndex("ProjectId1");
 
                     b.ToTable("SavedProjects");
                 });
@@ -834,80 +933,6 @@ namespace ErasmusAtlas.Infrastructure.Migrations
                     b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasMaxLength(13)
-                        .HasColumnType("nvarchar(13)");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("UserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedEmail")
-                        .HasDatabaseName("EmailIndex");
-
-                    b.HasIndex("NormalizedUserName")
-                        .IsUnique()
-                        .HasDatabaseName("UserNameIndex")
-                        .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
-
-                    b.UseTphMappingStrategy();
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
                     b.Property<int>("Id")
@@ -987,27 +1012,6 @@ namespace ErasmusAtlas.Infrastructure.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("ErasmusAtlas.Infrastructure.Models.ErasmusUser", b =>
-                {
-                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
-
-                    b.Property<string>("Bio")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DisplayName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FirstName")
-                        .HasMaxLength(80)
-                        .HasColumnType("nvarchar(80)");
-
-                    b.Property<string>("LastName")
-                        .HasMaxLength(80)
-                        .HasColumnType("nvarchar(80)");
-
-                    b.HasDiscriminator().HasValue("ErasmusUser");
                 });
 
             modelBuilder.Entity("ErasmusAtlas.Infrastructure.Models.Institution", b =>
@@ -1118,16 +1122,24 @@ namespace ErasmusAtlas.Infrastructure.Migrations
 
             modelBuilder.Entity("ErasmusAtlas.Infrastructure.Models.SavedPost", b =>
                 {
+                    b.HasOne("ErasmusAtlas.Infrastructure.Models.ErasmusUser", null)
+                        .WithMany("SavedPosts")
+                        .HasForeignKey("ErasmusUserId");
+
                     b.HasOne("ErasmusAtlas.Infrastructure.Models.Post", "Post")
-                        .WithMany("SavedByUsers")
+                        .WithMany()
                         .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("ErasmusAtlas.Infrastructure.Models.Post", null)
+                        .WithMany("SavedByUsers")
+                        .HasForeignKey("PostId1");
+
                     b.HasOne("ErasmusAtlas.Infrastructure.Models.ErasmusUser", "User")
-                        .WithMany("SavedPosts")
+                        .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Post");
@@ -1137,16 +1149,24 @@ namespace ErasmusAtlas.Infrastructure.Migrations
 
             modelBuilder.Entity("ErasmusAtlas.Infrastructure.Models.SavedProject", b =>
                 {
+                    b.HasOne("ErasmusAtlas.Infrastructure.Models.ErasmusUser", null)
+                        .WithMany("SavedProjects")
+                        .HasForeignKey("ErasmusUserId");
+
                     b.HasOne("ErasmusAtlas.Infrastructure.Models.Project", "Project")
-                        .WithMany("SavedByUsers")
+                        .WithMany()
                         .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("ErasmusAtlas.Infrastructure.Models.Project", null)
+                        .WithMany("SavedByUsers")
+                        .HasForeignKey("ProjectId1");
+
                     b.HasOne("ErasmusAtlas.Infrastructure.Models.ErasmusUser", "User")
-                        .WithMany("SavedProjects")
+                        .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Project");
@@ -1165,7 +1185,7 @@ namespace ErasmusAtlas.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("ErasmusAtlas.Infrastructure.Models.ErasmusUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1174,7 +1194,7 @@ namespace ErasmusAtlas.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("ErasmusAtlas.Infrastructure.Models.ErasmusUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1189,7 +1209,7 @@ namespace ErasmusAtlas.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("ErasmusAtlas.Infrastructure.Models.ErasmusUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1198,11 +1218,20 @@ namespace ErasmusAtlas.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("ErasmusAtlas.Infrastructure.Models.ErasmusUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("ErasmusAtlas.Infrastructure.Models.ErasmusUser", b =>
+                {
+                    b.Navigation("Posts");
+
+                    b.Navigation("SavedPosts");
+
+                    b.Navigation("SavedProjects");
                 });
 
             modelBuilder.Entity("ErasmusAtlas.Infrastructure.Models.Post", b =>
@@ -1227,15 +1256,6 @@ namespace ErasmusAtlas.Infrastructure.Migrations
             modelBuilder.Entity("ErasmusAtlas.Infrastructure.Models.Topic", b =>
                 {
                     b.Navigation("PostTopics");
-                });
-
-            modelBuilder.Entity("ErasmusAtlas.Infrastructure.Models.ErasmusUser", b =>
-                {
-                    b.Navigation("Posts");
-
-                    b.Navigation("SavedPosts");
-
-                    b.Navigation("SavedProjects");
                 });
 #pragma warning restore 612, 618
         }

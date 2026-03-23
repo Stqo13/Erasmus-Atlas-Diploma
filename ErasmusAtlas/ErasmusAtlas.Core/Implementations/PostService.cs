@@ -22,6 +22,11 @@ public class PostService(
             .Distinct()
             .ToList();
 
+        var location = await ResolveLocationAsync(
+            model.CityId,
+            model.Longitude,
+            model.Latitude);
+
         var post = new Post
         {
             Title = model.Title,
@@ -30,7 +35,7 @@ public class PostService(
             UserId = userId,
             Status = "Published",
             CreatedAt = DateTime.UtcNow,
-            Location = CreatePoint(model.Longitude, model.Latitude)
+            Location = location
         };
 
         foreach (var topicId in topicIds)
@@ -72,10 +77,15 @@ public class PostService(
             return false;
         }
 
+        var location = await ResolveLocationAsync(
+            model.CityId,
+            model.Longitude,
+            model.Latitude);
+
         post.Title = model.Title;
         post.Body = model.Body;
         post.CityId = model.CityId;
-        post.Location = CreatePoint(model.Longitude, model.Latitude);
+        post.Location = location;
 
         post.PostTopics.Clear();
 
@@ -294,5 +304,33 @@ public class PostService(
         {
             SRID = 4326
         };
+    }
+
+    private async Task<Point?> ResolveLocationAsync(int? cityId, double? longitude, double? latitude)
+    {
+        if (longitude.HasValue && latitude.HasValue)
+        {
+            return CreatePoint(longitude, latitude);
+        }
+
+        if (cityId.HasValue)
+        {
+            var city = await citiesRepository
+                .GetAllAttached()
+                .Where(c => c.Id == cityId.Value)
+                .Select(c => new
+                {
+                    c.Latitude,
+                    c.Longitude
+                })
+                .FirstOrDefaultAsync();
+
+            if (city != null)
+            {
+                return CreatePoint(city.Longitude, city.Latitude);
+            }
+        }
+
+        return null;
     }
 }

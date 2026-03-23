@@ -33,9 +33,10 @@ namespace ErasmusAtlas.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Discriminator = table.Column<string>(type: "nvarchar(13)", maxLength: 13, nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(80)", maxLength: 80, nullable: true),
                     LastName = table.Column<string>(type: "nvarchar(80)", maxLength: 80, nullable: true),
+                    DisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Bio = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -325,6 +326,41 @@ namespace ErasmusAtlas.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "SavedPosts",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    PostId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SavedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ErasmusUserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    PostId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SavedPosts", x => new { x.UserId, x.PostId });
+                    table.ForeignKey(
+                        name: "FK_SavedPosts_AspNetUsers_ErasmusUserId",
+                        column: x => x.ErasmusUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_SavedPosts_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_SavedPosts_Posts_PostId",
+                        column: x => x.PostId,
+                        principalTable: "Posts",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_SavedPosts_Posts_PostId1",
+                        column: x => x.PostId1,
+                        principalTable: "Posts",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ProjectApplications",
                 columns: table => new
                 {
@@ -374,6 +410,41 @@ namespace ErasmusAtlas.Infrastructure.Migrations
                         principalTable: "Tags",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SavedProjects",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ProjectId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SavedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ErasmusUserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    ProjectId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SavedProjects", x => new { x.UserId, x.ProjectId });
+                    table.ForeignKey(
+                        name: "FK_SavedProjects_AspNetUsers_ErasmusUserId",
+                        column: x => x.ErasmusUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_SavedProjects_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_SavedProjects_Projects_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Projects",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_SavedProjects_Projects_ProjectId1",
+                        column: x => x.ProjectId1,
+                        principalTable: "Projects",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.InsertData(
@@ -566,6 +637,36 @@ namespace ErasmusAtlas.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_SavedPosts_ErasmusUserId",
+                table: "SavedPosts",
+                column: "ErasmusUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SavedPosts_PostId",
+                table: "SavedPosts",
+                column: "PostId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SavedPosts_PostId1",
+                table: "SavedPosts",
+                column: "PostId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SavedProjects_ErasmusUserId",
+                table: "SavedProjects",
+                column: "ErasmusUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SavedProjects_ProjectId",
+                table: "SavedProjects",
+                column: "ProjectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SavedProjects_ProjectId1",
+                table: "SavedProjects",
+                column: "ProjectId1");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Tags_Name",
                 table: "Tags",
                 column: "Name",
@@ -600,19 +701,25 @@ namespace ErasmusAtlas.Infrastructure.Migrations
                 name: "ProjectTags");
 
             migrationBuilder.DropTable(
-                name: "AspNetRoles");
+                name: "SavedPosts");
 
             migrationBuilder.DropTable(
-                name: "Posts");
+                name: "SavedProjects");
+
+            migrationBuilder.DropTable(
+                name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "Topics");
 
             migrationBuilder.DropTable(
-                name: "Projects");
+                name: "Tags");
 
             migrationBuilder.DropTable(
-                name: "Tags");
+                name: "Posts");
+
+            migrationBuilder.DropTable(
+                name: "Projects");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

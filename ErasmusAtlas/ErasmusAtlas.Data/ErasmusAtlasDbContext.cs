@@ -35,6 +35,32 @@ public class ErasmusAtlasDbContext : IdentityDbContext<ErasmusUser>
     {
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
+        #region Saved Content Delete Behaviour
+        builder.Entity<SavedPost>()
+            .HasOne(sp => sp.Post)
+            .WithMany()
+            .HasForeignKey(sp => sp.PostId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        builder.Entity<SavedPost>()
+            .HasOne(sp => sp.User)
+            .WithMany()
+            .HasForeignKey(sp => sp.UserId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        builder.Entity<SavedProject>()
+            .HasOne(sp => sp.Project)
+            .WithMany()
+            .HasForeignKey(sp => sp.ProjectId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        builder.Entity<SavedProject>()
+            .HasOne(sp => sp.User)
+            .WithMany()
+            .HasForeignKey(sp => sp.UserId)
+            .OnDelete(DeleteBehavior.NoAction);
+        #endregion
+
         base.OnModelCreating(builder);
     }
 }
