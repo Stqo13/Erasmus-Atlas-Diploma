@@ -1,6 +1,15 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Identity
+@using ErasmusAtlas.Infrastructure.Models
+@inject SignInManager<ErasmusUser> SignInManager
+
+@{
     Layout = "_LayoutPublic";
     ViewData["Title"] = "Home";
+}
+
+@{
+    string currentController = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+    string Active(string name) => currentController.Equals(name, StringComparison.OrdinalIgnoreCase) ? "active" : "";
 }
 
 @section Styles {
@@ -9,12 +18,41 @@
 
 <div class="home-page">
 
+    <header class="home-nav">
+        <div class="home-nav-inner">
+            <a asp-controller="Home" asp-action="Index" class="home-brand">ErasmusAtlas</a>
+
+            <nav class="home-links">
+                <a class="@Active("Posts")" asp-controller="Posts" asp-action="Index">Posts</a>
+                <a class="@Active("Projects")" asp-controller="Projects" asp-action="Index">Projects</a>
+                <a class="@Active("Map")" asp-controller="Map" asp-action="Index">Map</a>
+            </nav>
+
+            <div class="home-auth">
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <a asp-controller="Home" asp-action="Dashboard" class="btn">Dashboard</a>
+                    <a asp-controller="Profiles" asp-action="Me" class="home-user-pill">
+                        <span class="home-user-avatar"></span>
+                        <span>@User.Identity!.Name</span>
+                    </a>
+                }
+                else
+                {
+                    <a asp-controller="Account" asp-action="Login" class="btn">Login</a>
+                    <a asp-controller="Account" asp-action="Register" class="btn btn-primary">Register</a>
+                }
+            </div>
+        </div>
+    </header>
+
     <section class="hero">
         <div class="hero-overlay"></div>
 
         <div class="hero-content">
-            <h1>Explore Erasmus Life Across Europe</h1>
-            <p>Real student experiences, cities, and projects — all in one place.</p>
+            <span class="hero-kicker">Real Erasmus experiences</span>
+            <h1>Explore student life across Europe</h1>
+            <p>Posts, projects, and city insights in one place.</p>
 
             <div class="hero-actions">
                 <a asp-controller="Posts" asp-action="Index" class="btn btn-primary">Explore Posts</a>
@@ -24,99 +62,114 @@
     </section>
 
     <section class="home-section">
-        <div class="section-header">
-            <h2>Latest Posts</h2>
-            <a asp-controller="Posts" asp-action="Index">See all →</a>
+        <div class="section-head">
+            <div>
+                <h2>Popular Erasmus destinations</h2>
+                <p>Swap these placeholders with real city images later.</p>
+            </div>
         </div>
 
-        <div class="card-grid">
-            @foreach (var post in ViewBag.LatestPosts)
-            {
-                <div class="card post-card">
-                    <div class="card-body">
-                        <div class="meta">
-                            <span>@post.City</span>
-                            <span>@post.CreatedOn.ToString("dd MMM")</span>
-                        </div>
-
-                        <h3>
-                            <a asp-controller="Posts" asp-action="Details" asp-route-id="@post.Id">
-                                @post.Title
-                            </a>
-                        </h3>
-
-                        <div class="tags">
-                            @foreach (var t in post.Topics)
-                            {
-                                <span class="tag">@t</span>
-                            }
-                        </div>
-                    </div>
+        <div class="destinations-grid">
+            <a class="destination-card destination-prague" asp-controller="Posts" asp-action="Index" asp-route-city="Prague">
+                <div class="destination-overlay"></div>
+                <div class="destination-content">
+                    <h3>Prague</h3>
+                    <span>Historic, student-friendly, central</span>
                 </div>
-            }
-        </div>
-    </section>
+            </a>
 
-    <section class="home-section">
-        <div class="section-header">
-            <h2>Discover Projects</h2>
-            <a asp-controller="Projects" asp-action="Index">See all →</a>
-        </div>
-
-        <div class="card-grid">
-            @foreach (var project in ViewBag.LatestProjects)
-            {
-                <div class="card project-card">
-                    <div class="card-body">
-                        <div class="meta">
-                            <span>@project.City</span>
-                            <span>@project.ProjectType</span>
-                        </div>
-
-                        <h3>
-                            <a asp-controller="Projects" asp-action="Details" asp-route-id="@project.Id">
-                                @project.Title
-                            </a>
-                        </h3>
-
-                        <p>@project.DescriptionPreview</p>
-                    </div>
+            <a class="destination-card destination-barcelona" asp-controller="Posts" asp-action="Index" asp-route-city="Barcelona">
+                <div class="destination-overlay"></div>
+                <div class="destination-content">
+                    <h3>Barcelona</h3>
+                    <span>Beach, culture, city energy</span>
                 </div>
-            }
-        </div>
-    </section>
+            </a>
 
-    <section class="map-cta">
-        <div class="map-cta-content">
-            <h2>Explore on the Map</h2>
-            <p>Find posts by location, discover cities visually.</p>
+            <a class="destination-card destination-rome" asp-controller="Posts" asp-action="Index" asp-route-city="Rome">
+                <div class="destination-overlay"></div>
+                <div class="destination-content">
+                    <h3>Rome</h3>
+                    <span>Food, history, campus life</span>
+                </div>
+            </a>
 
-            <a asp-controller="Map" asp-action="Index" class="btn btn-primary">
-                Open Interactive Map
+            <a class="destination-card destination-lisbon" asp-controller="Posts" asp-action="Index" asp-route-city="Lisbon">
+                <div class="destination-overlay"></div>
+                <div class="destination-content">
+                    <h3>Lisbon</h3>
+                    <span>Sunny, scenic, easygoing</span>
+                </div>
+            </a>
+
+            <a class="destination-card destination-amsterdam" asp-controller="Posts" asp-action="Index" asp-route-city="Amsterdam">
+                <div class="destination-overlay"></div>
+                <div class="destination-content">
+                    <h3>Amsterdam</h3>
+                    <span>Canals, bikes, international vibe</span>
+                </div>
+            </a>
+
+            <a class="destination-card destination-berlin" asp-controller="Posts" asp-action="Index" asp-route-city="Berlin">
+                <div class="destination-overlay"></div>
+                <div class="destination-content">
+                    <h3>Berlin</h3>
+                    <span>Creative, modern, diverse</span>
+                </div>
             </a>
         </div>
     </section>
 
     <section class="home-section">
-        <div class="section-header">
-            <h2>Popular Cities</h2>
+        <div class="section-head">
+            <div>
+                <h2>What you can do here</h2>
+                <p>Quickly explore the main parts of the platform.</p>
+            </div>
         </div>
 
-        <div class="city-grid">
-            @foreach (var city in ViewBag.Cities)
-            {
-                <div class="city-card">
-                    <span>@city.Name</span>
+        <div class="feature-grid">
+            <div class="card feature-card">
+                <div class="card-body">
+                    <h3>Read student posts</h3>
+                    <p>See honest experiences about housing, food, nightlife, costs, and university life.</p>
+                    <a asp-controller="Posts" asp-action="Index" class="feature-link">Browse posts →</a>
                 </div>
-            }
+            </div>
+
+            <div class="card feature-card">
+                <div class="card-body">
+                    <h3>Find opportunities</h3>
+                    <p>Explore projects by city, type, and tags to discover what matches your interests.</p>
+                    <a asp-controller="Projects" asp-action="Index" class="feature-link">Browse projects →</a>
+                </div>
+            </div>
+
+            <div class="card feature-card">
+                <div class="card-body">
+                    <h3>Explore on the map</h3>
+                    <p>Open the interactive map and discover posts based on real locations.</p>
+                    <a asp-controller="Map" asp-action="Index" class="feature-link">Open map →</a>
+                </div>
+            </div>
         </div>
     </section>
 
-    <section class="final-cta">
-        <h2>Start your Erasmus journey today</h2>
-        <a asp-controller="Account" asp-action="Register" class="btn btn-primary">
-            Join ErasmusAtlas
-        </a>
+    <section class="home-cta">
+        <div class="home-cta-inner">
+            <h2>Start your Erasmus journey with better local insight</h2>
+            <div class="hero-actions">
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <a asp-controller="Home" asp-action="Dashboard" class="btn btn-primary">Go to Dashboard</a>
+                }
+                else
+                {
+                    <a asp-controller="Account" asp-action="Register" class="btn btn-primary">Create Account</a>
+                    <a asp-controller="Account" asp-action="Login" class="btn">Login</a>
+                }
+            </div>
+        </div>
     </section>
 
 </div>
