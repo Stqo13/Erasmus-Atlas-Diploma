@@ -13,7 +13,7 @@ using NetTopologySuite.Geometries;
 namespace ErasmusAtlas.Infrastructure.Migrations
 {
     [DbContext(typeof(ErasmusAtlasDbContext))]
-    [Migration("20260323160720_InitialMigration")]
+    [Migration("20260324070142_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />

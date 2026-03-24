@@ -1,21 +1,37 @@
 using System.Diagnostics;
-using ErasmusAtlas.ViewModels.ErrorViewModels;
+
 using Microsoft.AspNetCore.Mvc;
+
+using ErasmusAtlas.Core.Interfaces;
+using ErasmusAtlas.ViewModels.ErrorViewModels;
+using ErasmusAtlas.Infrastructure.Repository.Interfaces;
+using ErasmusAtlas.Infrastructure.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace ErasmusAtlas.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController(
+        IPostService postService,
+        IProjectService projectService,
+        IRepository<City, int> cityRepository,
+        ILogger<HomeController> logger) 
+        : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        public async Task<IActionResult> Index()
         {
-            _logger = logger;
-        }
+            try
+            {
+                ViewBag.LatestPosts = await postService.GetLatestAsync(6);
+                ViewBag.LatestProjects = await projectService.GetLatestAsync(6);
+                ViewBag.Cities = await cityRepository.GetAllAttached().Take(6).ToListAsync();
 
-        public IActionResult Index()
-        {
-            return View();
+                return View();
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex.Message);
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         public IActionResult Privacy()

@@ -15,4 +15,5 @@ public interface IPostService
     Task<IEnumerable<PostInfoViewModel>> GetMineAsync(string userId);
     Task<IEnumerable<CityLookupViewModel>> GetCitiesAsync();
     Task<IEnumerable<TopicLookupViewModel>> GetTopicsAsync();
+    Task<IEnumerable<PostInfoViewModel>> GetLatestAsync(int count);
 }

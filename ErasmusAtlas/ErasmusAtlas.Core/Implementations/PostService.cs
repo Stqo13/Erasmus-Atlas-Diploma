@@ -333,4 +333,24 @@ public class PostService(
 
         return null;
     }
+
+    public async Task<IEnumerable<PostInfoViewModel>> GetLatestAsync(int count)
+    {
+        return await postsRepository
+            .GetAllAttached()
+            .OrderByDescending(p => p.CreatedAt)
+            .Take(count)
+            .Select(p => new PostInfoViewModel
+            {
+                Id = p.Id,
+                Title = p.Title,
+                CreatedOn = p.CreatedAt,
+                City = p.City != null ? p.City.Name : "Unknown",
+                Topics = p.PostTopics
+                    .Select(pt => pt.Topic.Name)
+                    .OrderBy(t => t)
+                    .ToList()
+            })
+            .ToListAsync();
+    }
 }

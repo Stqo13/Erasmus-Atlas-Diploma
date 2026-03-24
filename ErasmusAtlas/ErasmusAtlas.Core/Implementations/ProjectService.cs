@@ -129,6 +129,31 @@ public class ProjectService(
         return cities;
     }
 
+    public async Task<IEnumerable<ProjectInfoViewModel>> GetLatestAsync(int count)
+    {
+        return await projectRepository
+            .GetAllAttached()
+            .OrderByDescending(p => p.CreatedAt)
+            .Take(count)
+            .Select(p => new ProjectInfoViewModel
+            {
+                Id = p.Id,
+                Title = p.Title,
+                DescriptionPreview = p.Description.Length > 220
+                    ? p.Description.Substring(0, 220) + "..."
+                    : p.Description,
+                City = p.City != null ? p.City.Name : "Unknown",
+                Institution = p.Institution != null ? p.Institution.Name : "Unknown",
+                ProjectType = p.ProjectType.Name,
+                Tags = p.ProjectTags
+                    .Select(pt => pt.Tag.Name)
+                    .OrderBy(t => t)
+                    .ToList(),
+                CreatedOn = p.CreatedAt
+            })
+            .ToListAsync();
+    }
+
     public async Task<IEnumerable<ProjectTypeLookupViewModel>> GetProjectTypesAsync()
     {
         var projectTypes = await projectTypeRepository

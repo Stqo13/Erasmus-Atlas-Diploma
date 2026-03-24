@@ -12,7 +12,7 @@ public class ProfileService(ErasmusAtlasDbContext db) : IProfileService
 {
     public async Task<UserProfileViewModel?> GetProfileAsync(string userId, string? currentUserId = null)
     {
-        var user = await db.Users
+        var model = await db.Users
             .Where(u => u.Id == userId)
             .Select(u => new UserProfileViewModel
             {
@@ -21,8 +21,6 @@ public class ProfileService(ErasmusAtlasDbContext db) : IProfileService
                 DisplayName = string.IsNullOrWhiteSpace(u.DisplayName) ? u.UserName! : u.DisplayName!,
                 Bio = u.Bio,
                 PostsCount = u.Posts.Count,
-                SavedPostsCount = u.SavedPosts.Count,
-                SavedProjectsCount = u.SavedProjects.Count,
                 RecentPosts = u.Posts
                     .OrderByDescending(p => p.CreatedAt)
                     .Take(5)
@@ -62,7 +60,15 @@ public class ProfileService(ErasmusAtlasDbContext db) : IProfileService
             })
             .FirstOrDefaultAsync();
 
-        return user;
+        if (model == null)
+        {
+            return null;
+        }
+
+        model.SavedPostsCount = await db.SavedPosts.CountAsync(sp => sp.UserId == userId);
+        model.SavedProjectsCount = await db.SavedProjects.CountAsync(sp => sp.UserId == userId);
+
+        return model;
     }
 
     public async Task<EditProfileViewModel?> GetEditModelAsync(string userId)

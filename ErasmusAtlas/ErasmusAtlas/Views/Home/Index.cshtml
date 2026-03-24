@@ -1,94 +1,122 @@
 ﻿@{
-    Layout = "_LayoutDashboard";
-    ViewData["Title"] = "Dashboard";
+    Layout = "_LayoutPublic";
+    ViewData["Title"] = "Home";
 }
 
 @section Styles {
     <link rel="stylesheet" href="~/css/home-index.css" asp-append-version="true" />
 }
 
-<div class="content-inner">
-    <div class="dashboard-grid">
-        <div class="card kpi">
-            <div>
-                <div class="kpi-title">Total Posts</div>
-                <div class="kpi-value">250</div>
-                <div class="kpi-sub">Seeded demo content</div>
+<div class="home-page">
+
+    <section class="hero">
+        <div class="hero-overlay"></div>
+
+        <div class="hero-content">
+            <h1>Explore Erasmus Life Across Europe</h1>
+            <p>Real student experiences, cities, and projects — all in one place.</p>
+
+            <div class="hero-actions">
+                <a asp-controller="Posts" asp-action="Index" class="btn btn-primary">Explore Posts</a>
+                <a asp-controller="Map" asp-action="Index" class="btn">Open Map</a>
             </div>
-            <div class="chip">Live</div>
+        </div>
+    </section>
+
+    <section class="home-section">
+        <div class="section-header">
+            <h2>Latest Posts</h2>
+            <a asp-controller="Posts" asp-action="Index">See all →</a>
         </div>
 
-        <div class="card kpi">
-            <div>
-                <div class="kpi-title">Total Projects</div>
-                <div class="kpi-value">120</div>
-                <div class="kpi-sub">Across cities</div>
-            </div>
-            <div class="chip">Updated</div>
-        </div>
+        <div class="card-grid">
+            @foreach (var post in ViewBag.LatestPosts)
+            {
+                <div class="card post-card">
+                    <div class="card-body">
+                        <div class="meta">
+                            <span>@post.City</span>
+                            <span>@post.CreatedOn.ToString("dd MMM")</span>
+                        </div>
 
-        <div class="card kpi">
-            <div>
-                <div class="kpi-title">Institutions</div>
-                <div class="kpi-value">80</div>
-                <div class="kpi-sub">Universities & partners</div>
-            </div>
-            <div class="chip">Seeded</div>
-        </div>
+                        <h3>
+                            <a asp-controller="Posts" asp-action="Details" asp-route-id="@post.Id">
+                                @post.Title
+                            </a>
+                        </h3>
 
-        <div class="card kpi">
-            <div>
-                <div class="kpi-title">Applications</div>
-                <div class="kpi-value">—</div>
-                <div class="kpi-sub">Next feature</div>
-            </div>
-            <div class="chip">Soon</div>
-        </div>
-
-        <div class="card span-2">
-            <div class="card-header">
-                <div class="section-title">Recent posts</div>
-                <div class="section-subtitle">Latest experiences shared by students</div>
-            </div>
-            <div class="card-body">
-                <div class="table">
-                    <div class="table-row table-head">
-                        <div>Title</div>
-                        <div>Topic</div>
-                        <div>Date</div>
-                    </div>
-
-                    <div class="table-row">
-                        <div>Housing tips in Rome</div>
-                        <div>Housing</div>
-                        <div>2025-01-10</div>
-                    </div>
-                    <div class="table-row">
-                        <div>Eating like a local in Paris</div>
-                        <div>Food</div>
-                        <div>2025-01-08</div>
-                    </div>
-                    <div class="table-row">
-                        <div>Weekend trips from Lisbon</div>
-                        <div>Travel</div>
-                        <div>2025-01-03</div>
+                        <div class="tags">
+                            @foreach (var t in post.Topics)
+                            {
+                                <span class="tag">@t</span>
+                            }
+                        </div>
                     </div>
                 </div>
-            </div>
+            }
+        </div>
+    </section>
+
+    <section class="home-section">
+        <div class="section-header">
+            <h2>Discover Projects</h2>
+            <a asp-controller="Projects" asp-action="Index">See all →</a>
         </div>
 
-        <div class="card">
-            <div class="card-header">
-                <div class="section-title">Quick actions</div>
-                <div class="section-subtitle">Jump into the app</div>
-            </div>
-            <div class="card-body">
-                <div class="actions-stack">
-                    <a class="btn btn-primary" asp-controller="Map" asp-action="Index">Open map</a>
-                    <a class="btn" asp-controller="Posts" asp-action="Index">Browse posts</a>
-                    <a class="btn" asp-controller="Projects" asp-action="Index">Browse projects</a>
+        <div class="card-grid">
+            @foreach (var project in ViewBag.LatestProjects)
+            {
+                <div class="card project-card">
+                    <div class="card-body">
+                        <div class="meta">
+                            <span>@project.City</span>
+                            <span>@project.ProjectType</span>
+                        </div>
+
+                        <h3>
+                            <a asp-controller="Projects" asp-action="Details" asp-route-id="@project.Id">
+                                @project.Title
+                            </a>
+                        </h3>
+
+                        <p>@project.DescriptionPreview</p>
+                    </div>
                 </div>
-            </div>
+            }
         </div>
-    </div>
+    </section>
+
+    <section class="map-cta">
+        <div class="map-cta-content">
+            <h2>Explore on the Map</h2>
+            <p>Find posts by location, discover cities visually.</p>
+
+            <a asp-controller="Map" asp-action="Index" class="btn btn-primary">
+                Open Interactive Map
+            </a>
+        </div>
+    </section>
+
+    <section class="home-section">
+        <div class="section-header">
+            <h2>Popular Cities</h2>
+        </div>
+
+        <div class="city-grid">
+            @foreach (var city in ViewBag.Cities)
+            {
+                <div class="city-card">
+                    <span>@city.Name</span>
+                </div>
+            }
+        </div>
+    </section>
+
+    <section class="final-cta">
+        <h2>Start your Erasmus journey today</h2>
+        <a asp-controller="Account" asp-action="Register" class="btn btn-primary">
+            Join ErasmusAtlas
+        </a>
+    </section>
+
 </div>
