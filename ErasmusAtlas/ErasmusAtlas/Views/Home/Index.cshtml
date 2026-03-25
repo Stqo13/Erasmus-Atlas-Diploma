@@ -26,12 +26,12 @@
                 <a class="@Active("Posts")" asp-controller="Posts" asp-action="Index">Posts</a>
                 <a class="@Active("Projects")" asp-controller="Projects" asp-action="Index">Projects</a>
                 <a class="@Active("Map")" asp-controller="Map" asp-action="Index">Map</a>
+                <a class="@Active("Dashboard")" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
             </nav>
 
             <div class="home-auth">
                 @if (SignInManager.IsSignedIn(User))
                 {
-                    <a asp-controller="Home" asp-action="Dashboard" class="btn">Dashboard</a>
                     <a asp-controller="Profiles" asp-action="Me" class="home-user-pill">
                         <span class="home-user-avatar"></span>
                         <span>@User.Identity!.Name</span>
@@ -82,7 +82,7 @@
                 <div class="destination-overlay"></div>
                 <div class="destination-content">
                     <h3>Barcelona</h3>
-                    <span>Beach, culture, city energy</span>
+                    <span>Energy, culture, and city life</span>
                 </div>
             </a>
 
@@ -90,7 +90,7 @@
                 <div class="destination-overlay"></div>
                 <div class="destination-content">
                     <h3>Rome</h3>
-                    <span>Food, history, campus life</span>
+                    <span>Food, history, and timeless atmosphere</span>
                 </div>
             </a>
 
@@ -98,7 +98,7 @@
                 <div class="destination-overlay"></div>
                 <div class="destination-content">
                     <h3>Lisbon</h3>
-                    <span>Sunny, scenic, easygoing</span>
+                    <span>Sunny, scenic, and easygoing</span>
                 </div>
             </a>
 
@@ -106,7 +106,7 @@
                 <div class="destination-overlay"></div>
                 <div class="destination-content">
                     <h3>Amsterdam</h3>
-                    <span>Canals, bikes, international vibe</span>
+                    <span>Canals, bikes, and international vibe</span>
                 </div>
             </a>
 
@@ -114,7 +114,7 @@
                 <div class="destination-overlay"></div>
                 <div class="destination-content">
                     <h3>Berlin</h3>
-                    <span>Creative, modern, diverse</span>
+                    <span>Creative, modern, and diverse</span>
                 </div>
             </a>
         </div>
@@ -161,7 +161,7 @@
             <div class="hero-actions">
                 @if (SignInManager.IsSignedIn(User))
                 {
-                    <a asp-controller="Home" asp-action="Dashboard" class="btn btn-primary">Go to Dashboard</a>
+                    <a asp-controller="Dashboard" asp-action="Index" class="btn btn-primary">Go to Dashboard</a>
                 }
                 else
                 {

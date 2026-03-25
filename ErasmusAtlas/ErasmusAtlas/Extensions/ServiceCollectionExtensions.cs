@@ -31,6 +31,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IProjectService, ProjectService>();
         services.AddScoped<IProfileService, ProfileService>();
         services.AddScoped<ISavedContentService, SavedContentService>();
+        services.AddScoped<IDashboardService, DashboardService>();
 
         return services;
     }

@@ -1,0 +1,379 @@
+﻿@model ErasmusAtlas.ViewModels.DashboardViewModels.DashboardPageViewModel
+
+@{
+    Layout = "_LayoutDashboard";
+    ViewData["Title"] = "Dashboard";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/dashboard.css" asp-append-version="true" />
+}
+
+<div class="dashboard-page">
+    <section class="dashboard-hero card">
+        <div class="dashboard-hero-copy">
+            <span class="dashboard-kicker">Erasmus Atlas Analytics</span>
+            <h1 class="dashboard-title">Community dashboard</h1>
+            <p class="dashboard-subtitle">
+                Explore posting trends, topic distribution, and activity across Erasmus destinations.
+            </p>
+        </div>
+
+        <div class="dashboard-filter-card">
+            <label for="countryFilter">Filter by country</label>
+            <div class="dashboard-filter-row">
+                <select id="countryFilter" class="input dashboard-select">
+                    <option value="">All countries</option>
+                    @foreach (var country in Model.Countries)
+                    {
+                        <option value="@country.Iso2">@country.Name (@country.Iso2)</option>
+                    }
+                </select>
+
+                <button id="applyFilterBtn" type="button" class="btn btn-primary">Apply</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="dashboard-stats-grid">
+        <article class="dashboard-stat-card card">
+            <span class="dashboard-stat-label">Total Posts</span>
+            <strong id="kpiTotalPosts" class="dashboard-stat-value">0</strong>
+        </article>
+
+        <article class="dashboard-stat-card card">
+            <span class="dashboard-stat-label">Active Countries</span>
+            <strong id="kpiActiveCountries" class="dashboard-stat-value">0</strong>
+        </article>
+
+        <article class="dashboard-stat-card card">
+            <span class="dashboard-stat-label">Active Cities</span>
+            <strong id="kpiActiveCities" class="dashboard-stat-value">0</strong>
+        </article>
+
+        <article class="dashboard-stat-card card">
+            <span class="dashboard-stat-label">Posts This Month</span>
+            <strong id="kpiPostsThisMonth" class="dashboard-stat-value">0</strong>
+        </article>
+
+        <article class="dashboard-stat-card card">
+            <span class="dashboard-stat-label">Growth vs Last Month</span>
+            <strong id="kpiGrowthRate" class="dashboard-stat-value">0%</strong>
+        </article>
+
+        <article class="dashboard-stat-card card">
+            <span class="dashboard-stat-label">Topic Diversity</span>
+            <strong id="kpiTopicDiversity" class="dashboard-stat-value">0</strong>
+        </article>
+    </section>
+
+    <section class="dashboard-main-grid">
+        <article class="dashboard-panel dashboard-panel-large card">
+            <div class="dashboard-panel-head">
+                <div>
+                    <h2>Top topics</h2>
+                    <p>Distribution of topic mentions across posts</p>
+                </div>
+            </div>
+
+            <div id="topicBarChart" class="dashboard-chart"></div>
+        </article>
+
+        <article class="dashboard-panel card">
+            <div class="dashboard-panel-head">
+                <div>
+                    <h2>Leading topic</h2>
+                    <p>The currently most discussed theme</p>
+                </div>
+            </div>
+
+            <div class="dashboard-highlight-box">
+                <span id="topTopicText">N/A</span>
+            </div>
+        </article>
+
+        <article class="dashboard-panel dashboard-panel-wide card">
+            <div class="dashboard-panel-head">
+                <div>
+                    <h2>Monthly activity</h2>
+                    <p>Posts created during the last 12 months</p>
+                </div>
+            </div>
+
+            <div id="monthlyLineChart" class="dashboard-chart dashboard-chart-tall"></div>
+        </article>
+
+        <article class="dashboard-panel dashboard-panel-wide card">
+            <div class="dashboard-panel-head">
+                <div>
+                    <h2>Insights</h2>
+                    <p>Automatically generated observations</p>
+                </div>
+            </div>
+
+            <ul id="insightsList" class="dashboard-insights-list"></ul>
+        </article>
+    </section>
+
+    <div id="dashboardLoading" class="dashboard-status">Loading analytics...</div>
+    <div id="dashboardError" class="dashboard-status dashboard-status-error" style="display:none;"></div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+
+    <script>
+        const overviewUrl = '@Url.Action("GetOverview", "Dashboard")';
+
+        let topicChart = null;
+        let monthlyChart = null;
+
+        const totalPostsEl = document.getElementById('kpiTotalPosts');
+        const activeCountriesEl = document.getElementById('kpiActiveCountries');
+        const activeCitiesEl = document.getElementById('kpiActiveCities');
+        const postsThisMonthEl = document.getElementById('kpiPostsThisMonth');
+        const growthRateEl = document.getElementById('kpiGrowthRate');
+        const topicDiversityEl = document.getElementById('kpiTopicDiversity');
+        const topTopicTextEl = document.getElementById('topTopicText');
+        const insightsListEl = document.getElementById('insightsList');
+        const loadingEl = document.getElementById('dashboardLoading');
+        const errorEl = document.getElementById('dashboardError');
+        const countryFilterEl = document.getElementById('countryFilter');
+        const applyFilterBtnEl = document.getElementById('applyFilterBtn');
+
+        function setLoading(isLoading) {
+            loadingEl.style.display = isLoading ? 'block' : 'none';
+        }
+
+        function setError(message) {
+            if (!message) {
+                errorEl.style.display = 'none';
+                errorEl.textContent = '';
+                return;
+            }
+
+            errorEl.style.display = 'block';
+            errorEl.textContent = message;
+        }
+
+        function animateNumber(element, target, suffix = '', decimals = 0) {
+            const startValue = Number(element.dataset.value || 0);
+            const duration = 700;
+            const startTime = performance.now();
+
+            function frame(now) {
+                const progress = Math.min((now - startTime) / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 3);
+                const current = startValue + (target - startValue) * eased;
+
+                element.textContent = current.toFixed(decimals) + suffix;
+
+                if (progress < 1) {
+                    requestAnimationFrame(frame);
+                } else {
+                    element.dataset.value = target;
+                    element.textContent = target.toFixed(decimals) + suffix;
+                }
+            }
+
+            requestAnimationFrame(frame);
+        }
+
+        function updateKpis(data) {
+            animateNumber(totalPostsEl, data.totalPosts || 0, '', 0);
+            animateNumber(activeCountriesEl, data.activeCountries || 0, '', 0);
+            animateNumber(activeCitiesEl, data.activeCities || 0, '', 0);
+            animateNumber(postsThisMonthEl, data.postsThisMonth || 0, '', 0);
+            animateNumber(growthRateEl, data.growthRate || 0, '%', 1);
+            animateNumber(topicDiversityEl, data.topicDiversityScore || 0, '', 1);
+
+            topTopicTextEl.textContent = data.topTopic || 'N/A';
+        }
+
+        function renderInsights(data) {
+            insightsListEl.innerHTML = '';
+
+            if (!data.insights || data.insights.length === 0) {
+                const li = document.createElement('li');
+                li.textContent = 'No insights available yet.';
+                insightsListEl.appendChild(li);
+                return;
+            }
+
+            for (const insight of data.insights) {
+                const li = document.createElement('li');
+                li.textContent = insight;
+                insightsListEl.appendChild(li);
+            }
+        }
+
+        function renderTopicChart(data) {
+            const chartEl = document.getElementById('topicBarChart');
+
+            if (!topicChart) {
+                topicChart = echarts.init(chartEl);
+            }
+
+            const names = (data.topics || []).map(t => `${t.topic} (${t.percentage}%)`);
+            const counts = (data.topics || []).map(t => t.count);
+
+            topicChart.setOption({
+                animation: true,
+                animationDuration: 700,
+                animationDurationUpdate: 700,
+                animationEasing: 'cubicOut',
+                animationEasingUpdate: 'cubicOut',
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: { type: 'shadow' }
+                },
+                grid: {
+                    left: 40,
+                    right: 20,
+                    top: 20,
+                    bottom: 70
+                },
+                xAxis: {
+                    type: 'category',
+                    data: names,
+                    axisLabel: {
+                        rotate: 18,
+                        color: '#587085'
+                    },
+                    axisLine: {
+                        lineStyle: { color: '#BCCAD6' }
+                    }
+                },
+                yAxis: {
+                    type: 'value',
+                    axisLabel: {
+                        color: '#587085'
+                    },
+                    splitLine: {
+                        lineStyle: { color: '#DDE7EE' }
+                    }
+                },
+                series: [
+                    {
+                        type: 'bar',
+                        data: counts,
+                        universalTransition: true,
+                        barMaxWidth: 48,
+                        itemStyle: {
+                            color: '#16314A',
+                            borderRadius: [10, 10, 0, 0]
+                        }
+                    }
+                ]
+            });
+        }
+
+        function renderMonthlyChart(data) {
+            const chartEl = document.getElementById('monthlyLineChart');
+
+            if (!monthlyChart) {
+                monthlyChart = echarts.init(chartEl);
+            }
+
+            const months = (data.series || []).map(p => p.month);
+            const counts = (data.series || []).map(p => p.count);
+
+            monthlyChart.setOption({
+                animation: true,
+                animationDuration: 800,
+                animationDurationUpdate: 800,
+                animationEasing: 'cubicOut',
+                animationEasingUpdate: 'cubicOut',
+                tooltip: {
+                    trigger: 'axis'
+                },
+                grid: {
+                    left: 40,
+                    right: 20,
+                    top: 20,
+                    bottom: 40
+                },
+                xAxis: {
+                    type: 'category',
+                    data: months,
+                    axisLabel: {
+                        color: '#587085'
+                    },
+                    axisLine: {
+                        lineStyle: { color: '#BCCAD6' }
+                    }
+                },
+                yAxis: {
+                    type: 'value',
+                    axisLabel: {
+                        color: '#587085'
+                    },
+                    splitLine: {
+                        lineStyle: { color: '#DDE7EE' }
+                    }
+                },
+                series: [
+                    {
+                        type: 'line',
+                        data: counts,
+                        smooth: true,
+                        universalTransition: true,
+                        symbolSize: 8,
+                        lineStyle: {
+                            width: 3,
+                            color: '#16314A'
+                        },
+                        itemStyle: {
+                            color: '#3E5B72'
+                        },
+                        areaStyle: {
+                            color: 'rgba(126, 162, 184, 0.18)'
+                        }
+                    }
+                ]
+            });
+        }
+
+        async function loadDashboard() {
+            setLoading(true);
+            setError('');
+
+            try {
+                const country = countryFilterEl.value;
+                const url = country
+                    ? `${overviewUrl}?country=${encodeURIComponent(country)}`
+                    : overviewUrl;
+
+                const response = await fetch(url, {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to load analytics.');
+                }
+
+                const data = await response.json();
+
+                updateKpis(data);
+                renderTopicChart(data);
+                renderMonthlyChart(data);
+                renderInsights(data);
+            } catch (error) {
+                setError(error.message || 'Something went wrong while loading the dashboard.');
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        function resizeCharts() {
+            topicChart?.resize();
+            monthlyChart?.resize();
+        }
+
+        applyFilterBtnEl.addEventListener('click', loadDashboard);
+        window.addEventListener('resize', resizeCharts);
+        document.addEventListener('DOMContentLoaded', loadDashboard);
+    </script>
+}

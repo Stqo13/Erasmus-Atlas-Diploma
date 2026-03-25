@@ -23,8 +23,8 @@
     padding: 14px 18px;
     border: 1px solid var(--border);
     border-radius: 22px;
-    background: rgba(247, 250, 252, 0.82);
-    backdrop-filter: blur(10px);
+    background: rgba(247, 250, 252, 0.65);
+    backdrop-filter: blur(14px);
     box-shadow: var(--shadow-sm);
 }
 
@@ -53,7 +53,6 @@
         transition: all 0.2s ease;
     }
 
-        /* Hover effect */
         .home-links a:hover {
             color: var(--brand-dark);
             background: rgba(126, 162, 184, 0.12);
@@ -68,7 +67,6 @@
                 transform: scaleX(1);
             }
 
-        /* Underline animation */
         .home-links a::after {
             content: "";
             position: absolute;
@@ -87,12 +85,6 @@
             transform: scaleX(1);
         }
 
-.home-nav-inner {
-    background: rgba(247, 250, 252, 0.65);
-    backdrop-filter: blur(14px);
-    border: 1px solid rgba(62, 91, 114, 0.12);
-}
-
 .home-auth {
     display: flex;
     align-items: center;
@@ -106,7 +98,7 @@
     padding: 8px 12px;
     border: 1px solid var(--border);
     border-radius: 14px;
-    background: rgba(255,255,255,0.7);
+    background: rgba(255, 255, 255, 0.7);
     font-weight: 900;
     color: var(--brand-dark);
 }
@@ -221,12 +213,15 @@
 
 .destination-card {
     position: relative;
-    min-height: 260px;
+    min-height: 300px;
     border-radius: 24px;
     overflow: hidden;
     border: 1px solid var(--border);
     box-shadow: var(--shadow-sm);
     transition: transform .18s ease, box-shadow .18s ease;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
     .destination-card:hover {
@@ -262,27 +257,27 @@
     }
 
 .destination-prague {
-    background: linear-gradient(135deg, rgba(126,162,184,.28), transparent), linear-gradient(135deg, #3E5B72, #16314A);
+    background-image: url('/images/home/prague.jpg');
 }
 
 .destination-barcelona {
-    background: linear-gradient(135deg, rgba(221,231,238,.22), transparent), linear-gradient(135deg, #7EA2B8, #3E5B72);
+    background-image: url('/images/home/barcelona.jpg');
 }
 
 .destination-rome {
-    background: linear-gradient(135deg, rgba(126,162,184,.18), transparent), linear-gradient(135deg, #16314A, #061525);
+    background-image: url('/images/home/rome.jpg');
 }
 
 .destination-lisbon {
-    background: linear-gradient(135deg, rgba(221,231,238,.20), transparent), linear-gradient(135deg, #7EA2B8, #16314A);
+    background-image: url('/images/home/lisbon.jpg');
 }
 
 .destination-amsterdam {
-    background: linear-gradient(135deg, rgba(126,162,184,.16), transparent), linear-gradient(135deg, #3E5B72, #061525);
+    background-image: url('/images/home/amsterdam.jpg');
 }
 
 .destination-berlin {
-    background: linear-gradient(135deg, rgba(221,231,238,.18), transparent), linear-gradient(135deg, #16314A, #3E5B72);
+    background-image: url('/images/home/berlin.jpg');
 }
 
 /* FEATURES */
