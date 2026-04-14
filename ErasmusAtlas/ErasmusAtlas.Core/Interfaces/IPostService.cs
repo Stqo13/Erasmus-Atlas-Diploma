@@ -5,7 +5,7 @@ namespace ErasmusAtlas.Core.Interfaces;
 
 public interface IPostService
 {
-    Task<IEnumerable<PostInfoViewModel>> GetAllFilteredAsync(string? city, string? topic);
+    Task<PostIndexViewModel> GetAllFilteredAsync(string? city, string? topic, int page, int pageSize);
     Task<PostDetailsViewModel?> GetByIdAsync(Guid id, string? currentUserId);
     Task CreateAsync(CreatePostViewModel model, string userId);
     Task<EditPostViewModel?> GetEditModelAsync(Guid id, string userId);

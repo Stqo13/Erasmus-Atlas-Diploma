@@ -101,8 +101,18 @@ public class PostService(
         return await postsRepository.UpdateAsync(post);
     }
 
-    public async Task<IEnumerable<PostInfoViewModel>> GetAllFilteredAsync(string? city, string? topic)
+    public async Task<PostIndexViewModel> GetAllFilteredAsync(string? city, string? topic, int page, int pageSize)
     {
+        if (page < 1)
+        {
+            page = 1;
+        }
+
+        if (pageSize < 1)
+        {
+            pageSize = 12;
+        }
+
         var query = postsRepository
             .GetAllAttached();
 
@@ -116,8 +126,12 @@ public class PostService(
             query = query.Where(p => p.PostTopics.Any(pt => pt.Topic.Name == topic));
         }
 
+        var totalCount = await query.CountAsync();
+
         var posts = await query
             .OrderByDescending(p => p.CreatedAt)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
             .Select(p => new PostInfoViewModel
             {
                 Id = p.Id,
@@ -131,12 +145,15 @@ public class PostService(
             })
             .ToListAsync();
 
-        if (posts is null)
+        return new PostIndexViewModel
         {
-            throw new NullReferenceException("No posts found!");
-        }
-
-        return posts;
+            Posts = posts,
+            City = city,
+            Topic = topic,
+            CurrentPage = page,
+            PageSize = pageSize,
+            TotalCount = totalCount
+        };
     }
 
     public async Task<PostDetailsViewModel?> GetByIdAsync(Guid id, string? currentUserId)

@@ -15,9 +15,9 @@ public class PostsController(
 {
     [HttpGet]
     [Authorize]
-    public async Task<IActionResult> Index(string? city, string? topic)
+    public async Task<IActionResult> Index(string? city, string? topic, int page = 1, int pageSize = 12)
     {
-        var models = await postService.GetAllFilteredAsync(city, topic);
+        var models = await postService.GetAllFilteredAsync(city, topic, page, pageSize);
         return View(models);
     }
 

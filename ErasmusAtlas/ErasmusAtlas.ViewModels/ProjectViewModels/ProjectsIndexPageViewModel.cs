@@ -13,4 +13,19 @@ public class ProjectsIndexPageViewModel
     public IEnumerable<ProjectTypeLookupViewModel> ProjectTypes { get; set; } = new List<ProjectTypeLookupViewModel>();
 
     public IEnumerable<TagLookupViewModel> Tags { get; set; } = new List<TagLookupViewModel>();
+
+    public int CurrentPage { get; set; }
+
+    public int PageSize { get; set; }
+
+    public int TotalCount { get; set; }
+
+    public int TotalPages
+        => (int)Math.Ceiling((double)TotalCount / PageSize);
+
+    public bool HasPreviousPage
+        => CurrentPage > 1;
+
+    public bool HasNextPage
+        => CurrentPage < TotalPages;
 }
