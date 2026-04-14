@@ -5,7 +5,7 @@ namespace ErasmusAtlas.Core.Interfaces;
 
 public interface IProjectService
 {
-    Task<IEnumerable<ProjectInfoViewModel>> GetAllFilteredAsync(ProjectFilterViewModel filter);
+    Task<ProjectsIndexPageViewModel> GetAllFilteredAsync(ProjectFilterViewModel filter);
 
     Task<ProjectDetailsViewModel?> GetByIdAsync(Guid id, string userId);
 

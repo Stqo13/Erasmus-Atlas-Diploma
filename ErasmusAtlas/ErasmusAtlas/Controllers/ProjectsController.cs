@@ -17,15 +17,7 @@ public class ProjectsController(
     {
         try
         {
-            var model = new ProjectsIndexPageViewModel
-            {
-                Filter = filter,
-                Projects = await projectService.GetAllFilteredAsync(filter),
-                Cities = await projectService.GetCitiesAsync(),
-                ProjectTypes = await projectService.GetProjectTypesAsync(),
-                Tags = await projectService.GetTagsAsync()
-            };
-
+            var model = await projectService.GetAllFilteredAsync(filter);
             return View(model);
         }
         catch (NullReferenceException ex)

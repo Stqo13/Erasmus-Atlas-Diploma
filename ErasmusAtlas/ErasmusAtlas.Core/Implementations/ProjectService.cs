@@ -15,8 +15,18 @@ public class ProjectService(
     IRepository<SavedProject, object> savedProjectRepository)
     : IProjectService
 {
-    public async Task<IEnumerable<ProjectInfoViewModel>> GetAllFilteredAsync(ProjectFilterViewModel filter)
+    public async Task<ProjectsIndexPageViewModel> GetAllFilteredAsync(ProjectFilterViewModel filter)
     {
+        if (filter.Page < 1)
+        {
+            filter.Page = 1;
+        }
+
+        if (filter.PageSize < 1)
+        {
+            filter.PageSize = 12;
+        }
+
         var query = projectRepository
             .GetAllAttached();
 
@@ -26,7 +36,7 @@ public class ProjectService(
 
             query = query.Where(p =>
                 p.Title.Contains(term) ||
-                p.Description.Contains(term)); 
+                p.Description.Contains(term));
         }
 
         if (filter.CityId.HasValue)
@@ -41,12 +51,15 @@ public class ProjectService(
 
         if (filter.TagIds is not null && filter.TagIds.Any())
         {
-            query = query.Where(p => p.ProjectTags
-                .Any(pt => filter.TagIds.Contains(pt.TagId)));
+            query = query.Where(p => p.ProjectTags.Any(pt => filter.TagIds.Contains(pt.TagId)));
         }
+
+        int totalCount = await query.CountAsync();
 
         var projects = await query
             .OrderByDescending(p => p.CreatedAt)
+            .Skip((filter.Page - 1) * filter.PageSize)
+            .Take(filter.PageSize)
             .Select(p => new ProjectInfoViewModel
             {
                 Id = p.Id,
@@ -56,7 +69,7 @@ public class ProjectService(
                     : p.Description,
                 City = p.City != null ? p.City.Name : "Unknown",
                 Institution = p.Institution != null ? p.Institution.Name : "Unknown",
-                ProjectType = p.ProjectType.Name,
+                ProjectType = p.ProjectType != null ? p.ProjectType.Name : "Unknown",
                 Tags = p.ProjectTags
                     .Select(pt => pt.Tag.Name)
                     .OrderBy(t => t)
@@ -65,12 +78,17 @@ public class ProjectService(
             })
             .ToListAsync();
 
-        if (projects is null)
+        return new ProjectsIndexPageViewModel
         {
-            throw new NullReferenceException("Unable to find projects!");
-        }
-
-        return projects;
+            Filter = filter,
+            Projects = projects,
+            Cities = await GetCitiesAsync(),
+            ProjectTypes = await GetProjectTypesAsync(),
+            Tags = await GetTagsAsync(),
+            CurrentPage = filter.Page,
+            PageSize = filter.PageSize,
+            TotalCount = totalCount
+        };
     }
 
     public async Task<ProjectDetailsViewModel?> GetByIdAsync(Guid id, string userId)

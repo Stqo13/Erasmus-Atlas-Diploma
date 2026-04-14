@@ -67,27 +67,37 @@ a {
    ========================= */
 .app-shell {
     min-height: 100vh;
-    display: grid;
-    grid-template-columns: 220px 1fr;
     background: var(--bg);
 }
 
 .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 220px;
+    height: 100vh;
     background: var(--brand-dark);
     border-right: 1px solid var(--sidebar-border);
     padding: 18px 16px;
     display: flex;
     flex-direction: column;
     gap: 14px;
+    overflow-y: auto;
+    z-index: 1000;
 }
 
 .app-main {
+    margin-left: 220px;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     min-width: 0;
 }
 
 .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 900;
     background: rgba(247, 250, 252, 0.92);
     border-bottom: 1px solid var(--border);
     padding: 14px 18px;
@@ -105,6 +115,7 @@ a {
 }
 
 .content-inner {
+    width: 100%;
     max-width: 1180px;
     margin: 0 auto;
 }
@@ -474,6 +485,10 @@ a {
 
     .search input {
         width: 220px;
+    }
+
+    .app-main{
+        margin-left: 0;
     }
 }
 
