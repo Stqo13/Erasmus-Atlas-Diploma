@@ -6,32 +6,21 @@
 </div>
 
 <div class="topbar-right">
-    <div class="search">
+    @* <div class="search">
         <span class="dot"></span>
         <input type="text" name="q" placeholder="Search..." />
     </div>
 
     <button class="icon-btn" type="button" title="Language"></button>
-    <button class="icon-btn" type="button" title="Notifications"></button>
+    <button class="icon-btn" type="button" title="Notifications"></button> *@
 
     @if (SignInManager.IsSignedIn(User))
     {
         <div class="user-menu">
-            <button class="user-pill user-pill-btn" type="button" id="userMenuToggle" aria-expanded="false">
+            <a asp-controller="Profiles" asp-action="Me" class="user-pill user-pill-btn" type="button" id="userMenuToggle" aria-expanded="false">
                 <span class="user-avatar"></span>
                 <span>@User.Identity!.Name</span>
-            </button>
-
-            <div class="user-dropdown" id="userDropdown">
-                <a asp-controller="Profiles" asp-action="Me" class="user-dropdown-item">Profile</a>
-                <a asp-controller="Saved" asp-action="Projects" class="user-dropdown-item">Saved Projects</a>
-                <a asp-controller="Saved" asp-action="Posts" class="user-dropdown-item">Saved Posts</a>
-
-                <form asp-controller="Account" asp-action="Logout" method="post" class="user-dropdown-form">
-                    @Html.AntiForgeryToken()
-                    <button type="submit" class="user-dropdown-item user-dropdown-danger">Sign out</button>
-                </form>
-            </div>
+            </a>
         </div>
     }
     else

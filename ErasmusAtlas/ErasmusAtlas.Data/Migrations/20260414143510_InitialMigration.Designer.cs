@@ -13,7 +13,7 @@ using NetTopologySuite.Geometries;
 namespace ErasmusAtlas.Infrastructure.Migrations
 {
     [DbContext(typeof(ErasmusAtlasDbContext))]
-    [Migration("20260324153330_InitialMigration")]
+    [Migration("20260414143510_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -261,7 +261,7 @@ namespace ErasmusAtlas.Infrastructure.Migrations
                             CountryIso2 = "PL",
                             Latitude = 50.064700000000002,
                             Longitude = 19.945,
-                            Name = "Krak?w"
+                            Name = "Kraków"
                         },
                         new
                         {
@@ -269,7 +269,7 @@ namespace ErasmusAtlas.Infrastructure.Migrations
                             CountryIso2 = "PL",
                             Latitude = 54.351999999999997,
                             Longitude = 18.646599999999999,
-                            Name = "Gda?sk"
+                            Name = "Gdańsk"
                         },
                         new
                         {
@@ -277,7 +277,7 @@ namespace ErasmusAtlas.Infrastructure.Migrations
                             CountryIso2 = "PL",
                             Latitude = 51.107900000000001,
                             Longitude = 17.038499999999999,
-                            Name = "Wroc?aw"
+                            Name = "Wrocław"
                         },
                         new
                         {
@@ -309,7 +309,7 @@ namespace ErasmusAtlas.Infrastructure.Migrations
                             CountryIso2 = "CZ",
                             Latitude = 49.738399999999999,
                             Longitude = 13.3736,
-                            Name = "Plze?"
+                            Name = "Plzeň"
                         },
                         new
                         {

@@ -182,21 +182,21 @@
   },
   {
     "id": 26,
-    "name": "Krak?w",
+    "name": "Kraków",
     "countryIso2": "PL",
     "latitude": 50.0647,
     "longitude": 19.9450
   },
   {
     "id": 27,
-    "name": "Gda?sk",
+    "name": "Gdańsk",
     "countryIso2": "PL",
     "latitude": 54.3520,
     "longitude": 18.6466
   },
   {
     "id": 28,
-    "name": "Wroc?aw",
+    "name": "Wrocław",
     "countryIso2": "PL",
     "latitude": 51.1079,
     "longitude": 17.0385
@@ -225,7 +225,7 @@
   },
   {
     "id": 32,
-    "name": "Plze?",
+    "name": "Plzeň",
     "countryIso2": "CZ",
     "latitude": 49.7384,
     "longitude": 13.3736
