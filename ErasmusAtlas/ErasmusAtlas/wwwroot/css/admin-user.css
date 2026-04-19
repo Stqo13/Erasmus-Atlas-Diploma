@@ -1,0 +1,79 @@
+﻿.admin-page {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.admin-users-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.admin-user-card-body {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 18px;
+}
+
+.admin-user-name {
+    margin: 0 0 6px 0;
+    font-size: 20px;
+    font-weight: 950;
+    color: var(--brand-dark);
+}
+
+.admin-user-meta {
+    margin-top: 8px;
+    color: var(--text);
+    font-weight: 700;
+}
+
+.admin-role-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.role-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: var(--accent-pale);
+    color: var(--brand-dark);
+    font-size: 12px;
+    font-weight: 900;
+}
+
+.admin-user-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.admin-role-selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.role-check {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,0.7);
+    font-weight: 800;
+}
+
+@media (max-width: 760px) {
+    .admin-user-card-body {
+        flex-direction: column;
+    }
+}

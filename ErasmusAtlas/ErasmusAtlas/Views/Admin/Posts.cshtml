@@ -1,0 +1,39 @@
+﻿@model ErasmusAtlas.ViewModels.AdminViewModels.AdminPostsPageViewModel
+
+@{
+    Layout = "_LayoutDashboard";
+    ViewData["Title"] = "Manage Posts";
+}
+
+<div class="content-inner admin-page">
+    <div class="card">
+        <div class="card-body">
+            <h2 class="h1">Manage Posts</h2>
+            <div class="muted">Delete any post as an administrator.</div>
+        </div>
+    </div>
+
+    <div class="admin-users-list">
+        @foreach (var post in Model.Posts)
+        {
+            <article class="card admin-user-card">
+                <div class="card-body admin-user-card-body">
+                    <div>
+                        <h3 class="admin-user-name">@post.Title</h3>
+                        <div class="muted">@post.City • @post.CreatedOn.ToString("dd MMM yyyy")</div>
+                    </div>
+
+                    <div class="admin-user-actions">
+                        <a asp-controller="Posts" asp-action="Details" asp-route-id="@post.Id" class="btn btn-primary">View</a>
+
+                        <form asp-controller="Admin" asp-action="DeletePost" method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@post.Id" />
+                            <button type="submit" class="btn">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            </article>
+        }
+    </div>
+</div>

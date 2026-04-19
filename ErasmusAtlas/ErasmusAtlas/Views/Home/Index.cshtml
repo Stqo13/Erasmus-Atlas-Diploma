@@ -23,6 +23,10 @@
             <a asp-controller="Home" asp-action="Index" class="home-brand">ErasmusAtlas</a>
 
             <nav class="home-links">
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-controller="Admin" asp-action="Index" class="@Active("Admin")">Admin Panel</a>
+                }
                 <a class="@Active("Posts")" asp-controller="Posts" asp-action="Index">Posts</a>
                 <a class="@Active("Projects")" asp-controller="Projects" asp-action="Index">Projects</a>
                 <a class="@Active("Map")" asp-controller="Map" asp-action="Index">Map</a>

@@ -1,0 +1,139 @@
+﻿@model ErasmusAtlas.ViewModels.AdminViewModels.AdminDashboardViewModel
+
+@{
+    Layout = "_LayoutDashboard";
+    ViewData["Title"] = "Admin Panel";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/admin-index.css" asp-append-version="true" />
+}
+
+<div class="content-inner admin-page">
+    <div class="admin-header card">
+        <div class="card-body">
+            <h2 class="h1">Admin Panel</h2>
+            <div class="muted">System overview and management shortcuts.</div>
+
+            <div class="admin-shortcuts">
+                <a asp-controller="Admin" asp-action="Users" class="btn btn-primary">Manage Users</a>
+                <a asp-controller="Admin" asp-action="Posts" class="btn">Manage Posts</a>
+                <a asp-controller="Admin" asp-action="Projects" class="btn">Manage Projects</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="admin-stats-grid">
+        <article class="card admin-stat-card">
+            <div class="card-body">
+                <div class="admin-stat-label">Users</div>
+                <div class="admin-stat-value">@Model.UsersCount</div>
+            </div>
+        </article>
+
+        <article class="card admin-stat-card">
+            <div class="card-body">
+                <div class="admin-stat-label">Posts</div>
+                <div class="admin-stat-value">@Model.PostsCount</div>
+            </div>
+        </article>
+
+        <article class="card admin-stat-card">
+            <div class="card-body">
+                <div class="admin-stat-label">Projects</div>
+                <div class="admin-stat-value">@Model.ProjectsCount</div>
+            </div>
+        </article>
+
+        <article class="card admin-stat-card">
+            <div class="card-body">
+                <div class="admin-stat-label">Saved Posts</div>
+                <div class="admin-stat-value">@Model.SavedPostsCount</div>
+            </div>
+        </article>
+
+        <article class="card admin-stat-card">
+            <div class="card-body">
+                <div class="admin-stat-label">Saved Projects</div>
+                <div class="admin-stat-value">@Model.SavedProjectsCount</div>
+            </div>
+        </article>
+    </div>
+
+    <div class="admin-sections">
+        <section class="card">
+            <div class="card-body">
+                <h3 class="admin-section-title">Latest Posts</h3>
+                @if (!Model.LatestPosts.Any())
+                {
+                    <div class="muted">No posts available.</div>
+                }
+                else
+                {
+                    <div class="admin-list">
+                        @foreach (var post in Model.LatestPosts)
+                        {
+                            <div class="admin-list-item">
+                                <div>
+                                    <strong>@post.Title</strong>
+                                    <div class="muted">@post.City • @post.CreatedOn.ToString("dd MMM yyyy")</div>
+                                </div>
+                                <a asp-controller="Posts" asp-action="Details" asp-route-id="@post.Id" class="btn btn-primary">View</a>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </section>
+
+        <section class="card">
+            <div class="card-body">
+                <h3 class="admin-section-title">Latest Projects</h3>
+                @if (!Model.LatestProjects.Any())
+                {
+                    <div class="muted">No projects available.</div>
+                }
+                else
+                {
+                    <div class="admin-list">
+                        @foreach (var project in Model.LatestProjects)
+                        {
+                            <div class="admin-list-item">
+                                <div>
+                                    <strong>@project.Title</strong>
+                                    <div class="muted">@project.City • @project.CreatedOn.ToString("dd MMM yyyy")</div>
+                                </div>
+                                <a asp-controller="Projects" asp-action="Details" asp-route-id="@project.Id" class="btn btn-primary">View</a>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </section>
+
+        <section class="card">
+            <div class="card-body">
+                <h3 class="admin-section-title">Latest Users</h3>
+                @if (!Model.LatestUsers.Any())
+                {
+                    <div class="muted">No users available.</div>
+                }
+                else
+                {
+                    <div class="admin-list">
+                        @foreach (var user in Model.LatestUsers)
+                        {
+                            <div class="admin-list-item">
+                                <div>
+                                    <strong>@user.DisplayName</strong>
+                                    <div class="muted">@user.UserName • @user.Email</div>
+                                </div>
+                                <a asp-controller="Admin" asp-action="EditUser" asp-route-id="@user.Id" class="btn btn-primary">Edit</a>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </section>
+    </div>
+</div>
