@@ -1,0 +1,99 @@
+﻿@model ErasmusAtlas.ViewModels.ProjectViewModels.CreateProjectViewModel
+
+@{
+    Layout = "_LayoutDashboard";
+    ViewData["Title"] = "Create Project";
+}
+
+<div class="content-inner">
+    <div class="card">
+        <div class="card-body">
+            <h2 class="h1">Create Project</h2>
+            <div class="muted">Verified students and admins can publish project opportunities.</div>
+
+            <form asp-controller="Projects" asp-action="Create" method="post" class="form">
+                @Html.AntiForgeryToken()
+
+                <div asp-validation-summary="ModelOnly" class="validation"></div>
+
+                <div class="field">
+                    <label asp-for="Title"></label>
+                    <input asp-for="Title" class="input" />
+                    <span asp-validation-for="Title" class="validation"></span>
+                </div>
+
+                <div class="field">
+                    <label asp-for="Description"></label>
+                    <textarea asp-for="Description" class="input" rows="6"></textarea>
+                    <span asp-validation-for="Description" class="validation"></span>
+                </div>
+
+                <div class="row">
+                    <div class="field">
+                        <label asp-for="CityId">City</label>
+                        <select asp-for="CityId" class="input">
+                            <option value="">Select city</option>
+                            @foreach (var city in Model.Cities)
+                            {
+                                <option value="@city.Id">@city.Name</option>
+                            }
+                        </select>
+                        <span asp-validation-for="CityId" class="validation"></span>
+                    </div>
+
+                    <div class="field">
+                        <label asp-for="ProjectTypeId">Project Type</label>
+                        <select asp-for="ProjectTypeId" class="input">
+                            <option value="">Select project type</option>
+                            @foreach (var type in Model.ProjectTypes)
+                            {
+                                <option value="@type.Id">@type.Name</option>
+                            }
+                        </select>
+                        <span asp-validation-for="ProjectTypeId" class="validation"></span>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label asp-for="InstitutionName">Institution</label>
+                    <input asp-for="InstitutionName" class="input" />
+                    <span asp-validation-for="InstitutionName" class="validation"></span>
+                </div>
+
+                <div class="field">
+                    <label>Tags</label>
+                    <div class="admin-role-selector">
+                        @foreach (var tag in Model.Tags)
+                        {
+                            <label class="role-check">
+                                <input type="checkbox" name="TagIds" value="@tag.Id" />
+                                <span>@tag.Name</span>
+                            </label>
+                        }
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="field">
+                        <label asp-for="Latitude"></label>
+                        <input asp-for="Latitude" class="input" />
+                    </div>
+
+                    <div class="field">
+                        <label asp-for="Longitude"></label>
+                        <input asp-for="Longitude" class="input" />
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <a asp-controller="Projects" asp-action="Index" class="btn">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Create Project</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

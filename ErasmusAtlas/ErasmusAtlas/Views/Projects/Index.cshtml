@@ -17,6 +17,10 @@
                     <h2 class="h1">Explore projects</h2>
                     <div class="muted">Browse Erasmus opportunities by city, type, and tags.</div>
                 </div>
+                @if (User.IsInRole("Admin") || User.IsInRole("VerifiedStudent"))
+                {
+                    <a asp-controller="Projects" asp-action="Create" class="btn btn-primary">Create Project</a>
+                }
             </div>
 
             <form asp-controller="Projects" asp-action="Index" method="get" class="form project-filters">

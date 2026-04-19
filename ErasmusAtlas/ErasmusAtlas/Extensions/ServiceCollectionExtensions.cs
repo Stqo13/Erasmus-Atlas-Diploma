@@ -17,6 +17,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IRepository<Topic, int>, Repository<Topic, int>>();
         services.AddScoped<IRepository<ProjectType, int>, Repository<ProjectType, int>>();
         services.AddScoped<IRepository<Tag, int>, Repository<Tag, int>>();
+        services.AddScoped<IRepository<Institution, int>, Repository<Institution, int>>();
         services.AddScoped<IRepository<SavedPost, object>, Repository<SavedPost, object>>();
         services.AddScoped<IRepository<SavedProject, object>, Repository<SavedProject, object>>();
 

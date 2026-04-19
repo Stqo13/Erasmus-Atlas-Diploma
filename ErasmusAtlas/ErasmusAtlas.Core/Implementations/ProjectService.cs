@@ -12,9 +12,52 @@ public class ProjectService(
     IRepository<City, int> cityRepository,
     IRepository<ProjectType, int> projectTypeRepository,
     IRepository<Tag, int> tagRepository,
+    IRepository<Institution, int> institutionRepository,
     IRepository<SavedProject, object> savedProjectRepository)
     : IProjectService
 {
+    public async Task CreateAsync(CreateProjectViewModel model, string userId)
+    {
+        var distinctTagIds = model.TagIds
+        .Distinct()
+        .ToList();
+
+        Institution? institution = await institutionRepository
+            .GetAllAttached()
+            .FirstOrDefaultAsync(i => i.Name == model.InstitutionName);
+
+        if (institution == null)
+        {
+            institution = new Institution
+            {
+                Name = model.InstitutionName
+            };
+
+            await institutionRepository.AddAsync(institution);
+        }
+
+        var project = new Project
+        {
+            Title = model.Title,
+            Description = model.Description,
+            CityId = model.CityId,
+            ProjectTypeId = model.ProjectTypeId,
+            InstitutionId = institution.Id,
+            CreatedAt = DateTime.UtcNow,
+            Location = CreatePoint(model.Longitude, model.Latitude)
+        };
+
+        foreach (var tagId in distinctTagIds)
+        {
+            project.ProjectTags.Add(new ProjectTag
+            {
+                TagId = tagId
+            });
+        }
+
+        await projectRepository.AddAsync(project);
+    }
+
     public async Task<ProjectsIndexPageViewModel> GetAllFilteredAsync(ProjectFilterViewModel filter)
     {
         if (filter.Page < 1)
@@ -210,5 +253,18 @@ public class ProjectService(
         }
 
         return tags;
+    }
+
+    private static NetTopologySuite.Geometries.Point? CreatePoint(double? longitude, double? latitude)
+    {
+        if (!longitude.HasValue || !latitude.HasValue)
+        {
+            return null;
+        }
+
+        return new NetTopologySuite.Geometries.Point(longitude.Value, latitude.Value)
+        {
+            SRID = 4326
+        };
     }
 }

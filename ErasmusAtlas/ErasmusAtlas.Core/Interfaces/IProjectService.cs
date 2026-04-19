@@ -16,4 +16,6 @@ public interface IProjectService
     Task<IEnumerable<TagLookupViewModel>> GetTagsAsync();
 
     Task<IEnumerable<ProjectInfoViewModel>> GetLatestAsync(int count);
+
+    Task CreateAsync(CreateProjectViewModel model, string userId);
 }

@@ -46,6 +46,52 @@ public class ProjectsController(
         }
     }
 
+    [HttpGet]
+    [Authorize(Roles = "Admin,VerifiedStudent")]
+    public async Task<IActionResult> Create()
+    {
+        var model = new CreateProjectViewModel
+        {
+            Cities = await projectService.GetCitiesAsync(),
+            ProjectTypes = await projectService.GetProjectTypesAsync(),
+            Tags = await projectService.GetTagsAsync()
+        };
+
+        return View(model);
+    }
+
+    [HttpPost]
+    [Authorize(Roles = "Admin,VerifiedStudent")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(CreateProjectViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            model.Cities = await projectService.GetCitiesAsync();
+            model.ProjectTypes = await projectService.GetProjectTypesAsync();
+            model.Tags = await projectService.GetTagsAsync();
+            return View(model);
+        }
+
+        try
+        {
+            string userId = GetCurrentClientId();
+            await projectService.CreateAsync(model, userId);
+            return RedirectToAction(nameof(Index));
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error creating project.");
+
+            model.Cities = await projectService.GetCitiesAsync();
+            model.ProjectTypes = await projectService.GetProjectTypesAsync();
+            model.Tags = await projectService.GetTagsAsync();
+
+            ModelState.AddModelError(string.Empty, "Unable to create the project.");
+            return View(model);
+        }
+    }
+
     private string GetCurrentClientId()
     {
         return User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
