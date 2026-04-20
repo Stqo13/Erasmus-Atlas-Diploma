@@ -15,6 +15,7 @@ public class ProjectServiceTests
     private readonly Mock<IRepository<ProjectType, int>> projectTypeRepositoryMock;
     private readonly Mock<IRepository<Tag, int>> tagRepositoryMock;
     private readonly Mock<IRepository<SavedProject, object>> savedProjectRepositoryMock;
+    private readonly Mock<IRepository<Institution, int>> institutionRepositoryMock;
 
     private readonly ProjectService service;
 
@@ -25,6 +26,7 @@ public class ProjectServiceTests
         projectTypeRepositoryMock = new Mock<IRepository<ProjectType, int>>();
         tagRepositoryMock = new Mock<IRepository<Tag, int>>();
         savedProjectRepositoryMock = new Mock<IRepository<SavedProject, object>>();
+        institutionRepositoryMock = new Mock<IRepository<Institution, int>>();
 
         cityRepositoryMock
             .Setup(r => r.GetAllAttached())
@@ -60,6 +62,7 @@ public class ProjectServiceTests
             cityRepositoryMock.Object,
             projectTypeRepositoryMock.Object,
             tagRepositoryMock.Object,
+            institutionRepositoryMock.Object,
             savedProjectRepositoryMock.Object);
     }
 
@@ -385,6 +388,199 @@ public class ProjectServiceTests
         Assert.Equal("AI", result[0].Name);
         Assert.Equal("Erasmus+", result[1].Name);
         Assert.Equal("Web", result[2].Name);
+    }
+
+    [Fact]
+    public async Task CreateAsync_Should_Create_Project_With_Distinct_Tags_And_New_Institution()
+    {
+        // Arrange
+        Project? addedProject = null;
+        Institution? addedInstitution = null;
+
+        institutionRepositoryMock
+            .Setup(r => r.GetAllAttached())
+            .Returns(new List<Institution>().AsAsyncQueryable());
+
+        institutionRepositoryMock
+            .Setup(r => r.AddAsync(It.IsAny<Institution>()))
+            .Callback<Institution>(i =>
+            {
+                i.Id = 15;
+                addedInstitution = i;
+            })
+            .Returns(Task.CompletedTask);
+
+        projectRepositoryMock
+            .Setup(r => r.AddAsync(It.IsAny<Project>()))
+            .Callback<Project>(p => addedProject = p)
+            .Returns(Task.CompletedTask);
+
+        var model = new CreateProjectViewModel
+        {
+            Title = "AI Research Lab",
+            Description = "A new AI-focused Erasmus project for students.",
+            CityId = 2,
+            ProjectTypeId = 1,
+            InstitutionName = "TU Berlin",
+            TagIds = new List<int> { 1, 2, 2, 3 },
+            Latitude = 52.5200,
+            Longitude = 13.4050
+        };
+
+        // Act
+        await service.CreateAsync(model, "user-1");
+
+        // Assert
+        Assert.NotNull(addedInstitution);
+        Assert.Equal("TU Berlin", addedInstitution!.Name);
+
+        Assert.NotNull(addedProject);
+        Assert.Equal("AI Research Lab", addedProject!.Title);
+        Assert.Equal("A new AI-focused Erasmus project for students.", addedProject.Description);
+        Assert.Equal(2, addedProject.CityId);
+        Assert.Equal(1, addedProject.ProjectTypeId);
+        Assert.Equal(15, addedProject.InstitutionId);
+
+        Assert.NotNull(addedProject.Location);
+        Assert.Equal(13.4050, addedProject.Location!.X, 4);
+        Assert.Equal(52.5200, addedProject.Location.Y, 4);
+        Assert.Equal(4326, addedProject.Location.SRID);
+
+        Assert.Equal(3, addedProject.ProjectTags.Count);
+        Assert.Contains(addedProject.ProjectTags, t => t.TagId == 1);
+        Assert.Contains(addedProject.ProjectTags, t => t.TagId == 2);
+        Assert.Contains(addedProject.ProjectTags, t => t.TagId == 3);
+    }
+
+    [Fact]
+    public async Task CreateAsync_Should_Use_Existing_Institution_When_Found()
+    {
+        // Arrange
+        Project? addedProject = null;
+
+        institutionRepositoryMock
+            .Setup(r => r.GetAllAttached())
+            .Returns(new List<Institution>
+            {
+            new Institution
+            {
+                Id = 7,
+                Name = "UCM"
+            }
+            }.AsAsyncQueryable());
+
+        projectRepositoryMock
+            .Setup(r => r.AddAsync(It.IsAny<Project>()))
+            .Callback<Project>(p => addedProject = p)
+            .Returns(Task.CompletedTask);
+
+        var model = new CreateProjectViewModel
+        {
+            Title = "Climate Study",
+            Description = "Project about sustainability and climate research.",
+            CityId = 1,
+            ProjectTypeId = 2,
+            InstitutionName = "UCM",
+            TagIds = new List<int> { 5 },
+            Latitude = null,
+            Longitude = null
+        };
+
+        // Act
+        await service.CreateAsync(model, "user-1");
+
+        // Assert
+        institutionRepositoryMock.Verify(r => r.AddAsync(It.IsAny<Institution>()), Times.Never);
+
+        Assert.NotNull(addedProject);
+        Assert.Equal(7, addedProject!.InstitutionId);
+        Assert.Null(addedProject.Location);
+        Assert.Single(addedProject.ProjectTags);
+        Assert.Equal(5, addedProject.ProjectTags.First().TagId);
+    }
+
+    [Fact]
+    public async Task CreateAsync_Should_Not_Create_Location_When_Only_One_Coordinate_Is_Provided()
+    {
+        // Arrange
+        Project? addedProject = null;
+
+        institutionRepositoryMock
+            .Setup(r => r.GetAllAttached())
+            .Returns(new List<Institution>
+            {
+            new Institution
+            {
+                Id = 7,
+                Name = "UCM"
+            }
+            }.AsAsyncQueryable());
+
+        projectRepositoryMock
+            .Setup(r => r.AddAsync(It.IsAny<Project>()))
+            .Callback<Project>(p => addedProject = p)
+            .Returns(Task.CompletedTask);
+
+        var model = new CreateProjectViewModel
+        {
+            Title = "Climate Study",
+            Description = "Project about sustainability and climate research.",
+            CityId = 1,
+            ProjectTypeId = 2,
+            InstitutionName = "UCM",
+            TagIds = new List<int> { 5 },
+            Latitude = 40.4168,
+            Longitude = null
+        };
+
+        // Act
+        await service.CreateAsync(model, "user-1");
+
+        // Assert
+        Assert.NotNull(addedProject);
+        Assert.Null(addedProject!.Location);
+    }
+
+    [Fact]
+    public async Task CreateAsync_Should_Create_Project_With_No_Tags_When_TagList_Is_Empty()
+    {
+        // Arrange
+        Project? addedProject = null;
+
+        institutionRepositoryMock
+            .Setup(r => r.GetAllAttached())
+            .Returns(new List<Institution>
+            {
+            new Institution
+            {
+                Id = 7,
+                Name = "UCM"
+            }
+            }.AsAsyncQueryable());
+
+        projectRepositoryMock
+            .Setup(r => r.AddAsync(It.IsAny<Project>()))
+            .Callback<Project>(p => addedProject = p)
+            .Returns(Task.CompletedTask);
+
+        var model = new CreateProjectViewModel
+        {
+            Title = "Climate Study",
+            Description = "Project about sustainability and climate research.",
+            CityId = 1,
+            ProjectTypeId = 2,
+            InstitutionName = "UCM",
+            TagIds = new List<int>(),
+            Latitude = null,
+            Longitude = null
+        };
+
+        // Act
+        await service.CreateAsync(model, "user-1");
+
+        // Assert
+        Assert.NotNull(addedProject);
+        Assert.Empty(addedProject!.ProjectTags);
     }
 
     private static List<Project> BuildProjects()
